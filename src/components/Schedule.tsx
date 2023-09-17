@@ -10,7 +10,7 @@ type PlaceBtnProps = {
   add: () => void;
 };
 
-export default function PlaceBtn({ imgUrl, name, category, location, onClick, add }: PlaceBtnProps) {
+export default function Schedule({ imgUrl, name, category, location, onClick, add }: PlaceBtnProps) {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [clicked, setClicked] = useState<boolean>(false);
 
