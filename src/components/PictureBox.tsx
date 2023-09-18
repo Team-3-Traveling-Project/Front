@@ -35,7 +35,7 @@ export default function PictureBox({ imageURL, onClick, text, koText }: PictureB
 }
 
 const Box = styled.div`
-  margin: 30rem;
+  margin: 20px;
   width: 300px;
   height: 428px;
   transition: transform 0.3s ease-in-out;

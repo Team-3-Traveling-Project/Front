@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import area from '../utils/Area';
 
-interface SelectProps {
+type SelectProps = {
   selectList: string;
 }
 
