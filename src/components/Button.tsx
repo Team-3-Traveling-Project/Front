@@ -1,14 +1,14 @@
-import { type } from 'os';
 import styled from 'styled-components';
 
 type ButtonProps = {
   title: string;
+  onClick: () => void;
 };
 
-export default function Button({ title }: ButtonProps) {
+export default function Button({ title, onClick }: ButtonProps) {
   return (
     <ButtonLayout>
-      <Btn>{title}</Btn>
+      <Btn onClick={onClick}>{title}</Btn>
     </ButtonLayout>
   );
 }
