@@ -2,9 +2,17 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 // PlaceBtn 컴포넌트의 props 타입 정의
+// type PlaceBtnProps = {
+//   title: string;
+//   add: () => void;
+// };
+
 type PlaceBtnProps = {
   title: string;
-}
+  add?: any;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  active: any;
+};
 
 // PlaceBtn 컴포넌트 정의
 export default function PlaceBtn({ title }: PlaceBtnProps) {
@@ -12,10 +20,7 @@ export default function PlaceBtn({ title }: PlaceBtnProps) {
 
   return (
     <ButtonLayout>
-      <Btn 
-      onClick={()=> setBtnShadow(!btnShadow)}
-      className={btnShadow ? 'active':''}
-      >
+      <Btn onClick={() => setBtnShadow(!btnShadow)} className={btnShadow ? 'active' : ''}>
         {title}
       </Btn>
     </ButtonLayout>

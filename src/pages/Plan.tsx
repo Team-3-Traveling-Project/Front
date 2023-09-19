@@ -12,7 +12,7 @@ export default function Plan() {
   const [isOpened, setIsOpened] = useState<boolean>(true);
 
   // PlaceBtn이 클릭될 때 실행될 함수
-  const handlePlaceBtnClick = (title: string): void => {
+  const handlePlaceBtnClick = (title: any): any => {
     setActiveTab(title);
   };
 
@@ -38,9 +38,10 @@ export default function Plan() {
 
           <SearchLayout>
             <Search placeholder="장소명으로 검색해보세요"></Search>
+
             <span
+              className="material-symbols-outlined"
               onClick={() => {}}
-              className="material-symbols-rounded"
               style={{ color: '#BCBCBC', cursor: 'pointer' }}
             >
               search
