@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Plan from './pages/Plan';
+import DatePick from './components/DatePick';
 
 function App() {
   return (
@@ -20,7 +21,6 @@ function App() {
           <Route path="/plan" element={<Plan />} />
         </Routes>
       </Router>
-
     </>
   );
 }

@@ -6,6 +6,7 @@ import PlaceBtn from '../components/PlaceBtn';
 import Schedule from '../components/Schedule';
 import NumberScheduleBox from '../components/NumberScheduleBox';
 import MapContainer from '../utils/Map';
+import DatePick from '../components/DatePick';
 const categories = ['명소', '식당', '카페'];
 
 export default function Plan() {
@@ -35,7 +36,10 @@ export default function Plan() {
             <Select selectList="서울" />
           </Area>
 
-          <Date></Date>
+          <Date>
+            <p>날짜</p>
+            <DatePick />
+          </Date>
 
           <SearchLayout>
             <Search placeholder="장소명으로 검색해보세요"></Search>
@@ -244,10 +248,17 @@ const Area = styled.div`
 `;
 
 const Date = styled.div`
+  display: flex;
+  align-items: center;
   margin-top: 30px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   width: 322px;
   height: 54px;
+  p {
+    font-size: 20px;
+    font-weight: bold; 
+    margin-right: 24px;
+  }
 `;
 
 const SearchLayout = styled.div`
@@ -256,7 +267,7 @@ const SearchLayout = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 5px;
-  box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 2px rgba(102, 102, 102, 0.2);
 `;
 const Search = styled.input`
   width: 356px;
