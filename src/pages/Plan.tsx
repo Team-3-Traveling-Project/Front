@@ -5,6 +5,7 @@ import Select from '../components/Select';
 import PlaceBtn from '../components/PlaceBtn';
 import Schedule from '../components/Schedule';
 import NumberScheduleBox from '../components/NumberScheduleBox';
+import MapContainer from '../utils/Map';
 const categories = ['명소', '식당', '카페'];
 
 export default function Plan() {
@@ -199,7 +200,9 @@ export default function Plan() {
           </BookMark>
         </PlanBar>
 
-        <MapArea className={isOpened ? 'isOpened' : ''}></MapArea>
+        <MapArea className={isOpened ? 'isOpened' : ''}>
+          <MapContainer />
+        </MapArea>
       </Layout>
     </>
   );
@@ -328,7 +331,6 @@ const ScheduleArea = styled.div`
 const BookMark = styled.div`
   /* border: 1px solid black; */
   height: 350px;
-  margin-bottom: 50px;
   p {
     font-size: 18px;
     font-weight: bold;
@@ -346,7 +348,7 @@ const MapArea = styled.div`
 `;
 const BookMarkList = styled.div`
   gap: 16px;
-  max-height: 280px;
+  max-height: 300px;
   overflow-y: auto; /* 수직 스크롤 활성화 */
   padding: 10px;
   display: flex;
@@ -354,4 +356,5 @@ const BookMarkList = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   overflow-x: hidden;
+  margin-top: 10px;
 `;
