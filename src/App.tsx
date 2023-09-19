@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import BookMark from './pages/BookMark';
+import Plan from './pages/Plan';
+import DatePick from './components/DatePick';
 
 function App() {
   return (
@@ -19,9 +21,9 @@ function App() {
           <Route path="/singUp" element={<SignUp />} />
           <Route path="/main" element={<Main />} />
           <Route path="/bookMark" element={<BookMark />} />
+          <Route path="/plan" element={<Plan />} />
         </Routes>
       </Router>
-
     </>
   );
 }
