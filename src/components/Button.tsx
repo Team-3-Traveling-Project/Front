@@ -20,12 +20,12 @@ const Btn = styled.button`
   /* 글자 */
   color: #fff;
   text-align: center;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
 
   /* 네모 박스 */
-  width: 80px;
-  height: 54px;
+  width: 70px;
+  height: 45px;
   border-radius: 5px;
   background: #222;
   transition: box-shadow 0.3s ease-in-out; /* 그림자 변화를 부드럽게 만듦 */

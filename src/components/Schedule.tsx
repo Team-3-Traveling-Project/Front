@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 
 type PlaceBtnProps = {
-  imgUrl: string;
-  name: string;
-  category: string;
-  location: string;
-  onClick: () => void;
+  imgUrl?: string;
+  name?: string;
+  category?: string;
+  location?: string;
+  onClick?: () => void;
   add: () => void;
 };
 
