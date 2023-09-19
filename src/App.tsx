@@ -9,6 +9,7 @@ import BookMark from './pages/BookMark';
 import Plan from './pages/Plan';
 import DatePick from './components/DatePick';
 import PlanCheck from './pages/PlanCheck';
+import MyPage from './pages/MyPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/bookMark" element={<BookMark />} />
           <Route path="/plan" element={<Plan />} />
           <Route path="/planCheck" element={<PlanCheck />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </Router>
     </>
