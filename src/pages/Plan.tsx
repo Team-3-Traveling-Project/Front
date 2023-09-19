@@ -7,6 +7,7 @@ import Schedule from '../components/Schedule';
 import NumberScheduleBox from '../components/NumberScheduleBox';
 import MapContainer from '../utils/Map';
 import DatePick from '../components/DatePick';
+import { useNavigate } from 'react-router';
 const categories = ['명소', '식당', '카페'];
 
 export default function Plan() {
@@ -22,12 +23,14 @@ export default function Plan() {
     setIsOpened(!isOpened);
   };
 
+  const navigate = useNavigate();
+
   return (
     <>
       <Layout>
         <LogoBar>
-          <Button title="로고" />
-          <Button title="다음" />
+          <Button title="로고" onClick={()=>{navigate('/main');}} />
+          <Button title="다음" onClick={()=>{navigate('/planCheck');}}/>
         </LogoBar>
 
         <AreaBar>
