@@ -18,12 +18,12 @@ function App() {
       {/* <MapContainer/> */}
       <Router>
         <Routes>
+          <Route path="/" element={<Main />} />
           <Route path="/login" element={<Login />} />
           <Route path="/singUp" element={<SignUp />} />
-          <Route path="/main" element={<Main />} />
           <Route path="/bookMark" element={<BookMark />} />
           <Route path="/plan" element={<Plan />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage:/user_id" element={<MyPage />} />
         </Routes>
       </Router>
     </>
