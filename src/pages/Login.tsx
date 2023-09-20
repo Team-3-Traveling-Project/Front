@@ -2,51 +2,36 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import useInput from '../hooks/useInput';
-import axios from 'axios';
+import { baseInstance } from '../apis/config';
 
 export default function Login() {
-  const [idInput, idHandleChange] = useInput('');
-  const [pwInput, pwHandleChange] = useInput('');
-  const [isId, setIsId] = useState(false);
+  // const [idInput, idHandleChange] = useInput('');
+  // const [pwInput, pwHandleChange] = useInput('');
+  // const [isId, setIsId] = useState(false);
+
+  const [idInput, setIdInput] = useState('');
+  const [pwInput, setPwInput] = useState('');
   const navigate = useNavigate();
 
-  // const checkUser = async () => {
-  //   try {
-  //     const response = await axios.get('http://3.38.191.164/user', {
-  //       headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
-  //     });
-  //     console.log(response);
-  //     if (response.status === 200) {
-  //       navigate('/home');
-  //     }
-  //   } catch (error) {
-  //     console.log('error', error);
-  //     // alert(error.response.data.message);
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   checkUser();
-  // }, []);
 
-  // const login = async () => {
-  //   const info = {
-  //     id: idInput,
-  //     password: pwInput,
-  //   };
+  const login = async () => {
+    const info = {
+      userId: idInput,
+      password: pwInput,
+    };
 
-  //   try {
-  //     const response = await axios.post('http://3.38.191.164/login', info);
-  //     console.log(response);
-  //     if (response.status === 201) {
-  //       localStorage.setItem('token', response.data.token);
-  //       checkUser();
-  //       // navigate('/home');
-  //     }
-  //   } catch (error) {
-  //     alert(error.response.data.message);
-  //   }
-  // };
+    try {
+      const response = await baseInstance.post('/user/login', info);
+      if (response.data.statusCode === 200) {
+        localStorage.setItem('Authorization', response.headers.authorization);
+        // checkUser();
+        navigate('/home');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout>
@@ -57,16 +42,30 @@ export default function Login() {
           <InputLayout>
             <Label>아이디</Label>
             <br />
-            <Input type="text" placeholder="아이디를 입력해주세요!" value={idInput} onChange={() => {}} />
-            <div className="validation-id">{}</div>
+            <Input
+              type="text"
+              placeholder="아이디를 입력해주세요!"
+              value={idInput}
+              onChange={(e) => {
+                setIdInput(e.target.value);
+              }}
+            />
+            {/* <div className="validation-id">{}</div>
 
-            {idInput.length > 0 && <span className={`message ${isId ? 'success' : 'error'}`}>{/* {idMessage} */}</span>}
+            {idInput.length > 0 && <span className={`message ${isId ? 'success' : 'error'}`}>{idMessage}</span>} */}
           </InputLayout>
 
           <InputLayout>
             <Label>비밀번호</Label>
             <br />
-            <Input type="password" placeholder="비밀번호를 입력해주세요!" value={pwInput} onChange={() => {}} />
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력해주세요!"
+              value={pwInput}
+              onChange={(e) => {
+                setPwInput(e.target.value);
+              }}
+            />
           </InputLayout>
 
           <SignUpButton
@@ -78,7 +77,7 @@ export default function Login() {
           </SignUpButton>
 
           <form onSubmit={(e) => e.preventDefault()}>
-            <Button onClick={() => {}}>확인</Button>
+            <Button onClick={login}>확인</Button>
           </form>
         </WhiteBox>
         <PictureLayout>
