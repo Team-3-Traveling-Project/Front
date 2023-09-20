@@ -1,42 +1,80 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useInput from '../hooks/useInput';
+import { baseInstance } from '../apis/config';
 
 export default function SignUp() {
   const navigate = useNavigate();
+
+  const [nickNameInput, nameHandleChange] = useInput('');
+  const [emailInput, emailHandleChange] = useInput('');
   const [idInput, idHandleChange] = useInput('');
   const [pwInput, pwHandleChange] = useInput('');
+  const [pwCheckInput, pwCheckHandleChange] = useInput('');
+
+  const [isNickName, setIsNickName] = useState(false);
   const [isId, setIsId] = useState(false);
   const [isPw, setIsPw] = useState(false);
+  const [isPwCheck, setIsPwCheck] = useState(false);
+
   const [idMessage, setIdMessage] = useState('영어/숫자 포함 6자리 이상');
-  const [pwMessage, setPwMessage] = useState('영어 대소문자/숫자/특수기호 포함 6자 이상');
+  const [pwMessage, setPwMessage] = useState('영어/숫자/특수문자 포함 8자 이상');
+  const [pwCheckMessage, setPwCheckMessage] = useState('비밀번호가 일치하지 않습니다.');
 
-  // const signUp = async (info: { id: string; password: string }) => {
-  //   try {
-  //     const response = await axios.post('http://3.38.191.164/register', info);
+  type infoPros = { 
+    userId: string; 
+    password: string, 
+    nickname: string, 
+    email:string 
+  }
 
-  //     if (response.status === 201) navigate('/');
-  //   } catch (error) {
-  //     alert(error.response.data.message);
-  //   }
-  // };
+  const signUp =async (info: infoPros) => {
+    try {
+      const response = await baseInstance.post('user/signup',info);
+      console.log(response);
+      if(response.status === 200) {
+        alert(response.data.msg);
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error)
+      alert('중복된 id입니다. 다시 입력해주세요.')
+    }
+  }
 
-  // const validateId = (id: string) => {
-  //   const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-  //   setIsId(pattern.test(id));
-  // };
+  // 유효성 검사
+  const validateNickName = (id: string) => {
+    const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    setIsNickName(pattern.test(id));
+  };
+  const validateId = (id: string) => {
+    const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    setIsId(pattern.test(id));
+  };
+  const validatePw = (pw: string) => {
+    // const pattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const pattern = /^.{8,}$/;
+    setIsPw(pattern.test(pw));
+  };
+  const validatepwCheck = (pwCheck: string) => {
+    if(pwCheck === pwInput) {
+      setIsPwCheck(true);
+      setPwCheckMessage('비밀번호가 일치합니다')
+    } else {
+      setIsPwCheck(false);
+      setPwCheckMessage('비밀번호가 일치하지 않습니다.')
+    }
+  };
 
-  // const validatePw = (pw: string) => {
-  //   const pattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-  //   setIsPw(pattern.test(pw));
-  // };
-
-  // const data = {
-  //   id: idInput,
-  //   password: pwInput,
-  // };
+  const data = {
+    userId: idInput,
+    password: pwInput,
+    nickname: nickNameInput,
+    email : emailInput,
+  };
+  // console.log("data : ",data);
 
   return (
     <>
@@ -51,15 +89,15 @@ export default function SignUp() {
               <Input
                 type="text"
                 placeholder="닉네임을 입력해주세요"
-                // onChange={(e) => {
-                //   idHandleChange(e);
-                //   validateId(e.target.value);
-                // }}
-                value={idInput}
+                onChange={(e) => {
+                  nameHandleChange(e);
+                  validateNickName(e.target.value);
+                }}
+                value={nickNameInput}
               />
-              {idInput.length >= 0 && (
+              {nickNameInput.length >= 0 && (
                 <Validation>
-                  <ValidationMessage className={`message ${isId ? 'success' : 'error'}`}>
+                  <ValidationMessage className={`message ${isNickName ? 'success' : 'error'}`}>
                     <span className="material-symbols-outlined">check_circle</span>
                     {idMessage}
                   </ValidationMessage>
@@ -68,15 +106,28 @@ export default function SignUp() {
             </InputLayout>
 
             <InputLayout>
+              <Label>이메일</Label>
+              <br />
+              <Input
+                type="text"
+                placeholder="이메일을 입력해주세요"
+                value={emailInput}
+                onChange={(e) => {
+                  emailHandleChange(e);
+                }}
+              />
+            </InputLayout>
+
+            <InputLayout>
               <Label>아이디</Label>
               <br />
               <Input
                 type="text"
                 placeholder="아이디를 입력해주세요"
-                // onChange={(e) => {
-                //   idHandleChange(e);
-                //   validateId(e.target.value);
-                // }}
+                onChange={(e) => {
+                  idHandleChange(e);
+                  validateId(e.target.value);
+                }}
                 value={idInput}
               />
               {idInput.length >= 0 && (
@@ -96,10 +147,10 @@ export default function SignUp() {
                 type="password"
                 placeholder="비밀번호를 입력해주세요"
                 value={pwInput}
-                // onChange={(e) => {
-                //   pwHandleChange(e);
-                //   validatePw(e.target.value);
-                // }}
+                onChange={(e) => {
+                  pwHandleChange(e);
+                  validatePw(e.target.value);
+                }}
               />
               {pwInput.length >= 0 && (
                 <Validation>
@@ -117,17 +168,17 @@ export default function SignUp() {
               <Input
                 type="password"
                 placeholder="비밀번호를 한번 더 입력해주세요"
-                value={pwInput}
-                // onChange={(e) => {
-                //   pwHandleChange(e);
-                //   validatePw(e.target.value);
-                // }}
+                value={pwCheckInput}
+                onChange={(e) => {
+                  pwCheckHandleChange(e);
+                  validatepwCheck(e.target.value);
+                }}
               />
-              {pwInput.length >= 0 && (
+              {pwCheckInput.length >= 0 && (
                 <Validation>
-                  <ValidationMessage className={`message ${isPw ? 'success' : 'error'}`}>
-                    <span className="material-symbols-outlined">check_circle</span>
-                    {pwMessage}
+                  <ValidationMessage className={`message ${isPwCheck ? 'success' : 'error'}`}>
+                    <span className="material-symbols-outlined" >check_circle</span>
+                    {pwCheckMessage}
                   </ValidationMessage>
                 </Validation>
               )}
@@ -141,11 +192,11 @@ export default function SignUp() {
               로그인하러 가기
             </SignUpButton>
             <form
-            // onSubmit={(e) => {
-            //   e.preventDefault();
-            //   if (data.id === '' || data.password === '') alert('아이디와 비밀번호를 모두 입력해주세요');
-            //   else signUp(data);
-            // }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (data.userId === '' || data.password === '') alert('아이디와 비밀번호를 모두 입력해주세요');
+              else signUp(data);
+            }}
             >
               <Button>확인</Button>
             </form>
@@ -183,14 +234,13 @@ const Layout1 = styled.div`
 
 const WhiteBox = styled.div`
   width: 530px;
-  height: 900px;
+  height: 1020px;
   display: flex;
   background-color: white;
   /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   border-radius: 14px;
-  overflow-y: auto;
   margin-bottom: 70px;
 `;
 
@@ -281,6 +331,8 @@ const Validation = styled.div`
 `;
 
 const ValidationMessage = styled.span`
+  display: flex;
+  align-items: center;
   &.success {
     color: #1e982c;
   }
@@ -293,6 +345,3 @@ const ValidationMessage = styled.span`
 const Image = styled.img`
   width: 100%;
 `;
-
-// CSS
-// (여기에 CSS 코드 추가)
