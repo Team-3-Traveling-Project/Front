@@ -6,7 +6,7 @@ type BookMarkProps = {
   category: string;
   location: string;
   onClick: () => void;
-  onDelete : () => void;
+  onDelete : any;
 };
 
 export default function BookMarkBox({ imgUrl, name, category, location, onClick, onDelete }: BookMarkProps) {
