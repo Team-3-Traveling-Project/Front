@@ -29,8 +29,18 @@ export default function Plan() {
     <>
       <Layout>
         <LogoBar>
-          <Button title="로고" onClick={()=>{navigate('/main');}} />
-          <Button title="다음" onClick={()=>{navigate('/planCheck');}}/>
+          <Button
+            title="로고"
+            onClick={() => {
+              navigate('/main');
+            }}
+          />
+          <Button
+            title="다음"
+            onClick={() => {
+              navigate('/planCheck');
+            }}
+          />
         </LogoBar>
 
         <AreaBar>
@@ -208,7 +218,7 @@ export default function Plan() {
         </PlanBar>
 
         <MapArea className={isOpened ? 'isOpened' : ''}>
-          <MapContainer />
+          {/* <MapContainer places={''} /> */}
         </MapArea>
       </Layout>
     </>
@@ -259,7 +269,7 @@ const Date = styled.div`
   height: 54px;
   p {
     font-size: 20px;
-    font-weight: bold; 
+    font-weight: bold;
     margin-right: 24px;
   }
 `;

@@ -19,7 +19,7 @@ export default function ScheduleBox({ imgUrl, num, name, category, location, onC
         <Num>{num}</Num>
         <TextBox>
           <span style={{ color: '#63BEC6', marginRight: '4px' }}>명소</span>
-          <Title>{location}</Title>
+          <Title>{name}</Title>
         </TextBox>
         <img
           style={{

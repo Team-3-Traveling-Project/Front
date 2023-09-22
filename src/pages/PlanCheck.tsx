@@ -21,7 +21,8 @@ function PlanCheck() {
       setDate(response.data[0].date);
       setCity(response.data[0].city);
       setPlaces(response.data[0].placeList);
-      console.log('places', typeof places);
+
+      // console.log('places', typeof places);
       console.log('places', places[0].img_url);
     } catch (error) {
       console.log('error', error);
@@ -30,9 +31,12 @@ function PlanCheck() {
 
   useEffect(() => {
     getPlans();
-    console.log();
   }, []);
 
+  useEffect(() => {
+    console.log('plancheck', places);
+  }, [places]);
+  
   return (
     <Layout>
       <SideBar>
@@ -69,6 +73,7 @@ function PlanCheck() {
           {places.map((item, index) => {
             return (
               <ScheduleBox
+                key={item.id}
                 imgUrl={item.img_url}
                 num={index + 1}
                 name={item.place_name}
@@ -84,7 +89,7 @@ function PlanCheck() {
       </PlanCheckBar>
 
       <div style={{ width: '908px' }}>
-        <MapContainer />
+        <MapContainer places={places} />
       </div>
     </Layout>
   );

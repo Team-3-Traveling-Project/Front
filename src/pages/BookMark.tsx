@@ -4,7 +4,7 @@ import BookMarkBox from '../components/BookMarkBox';
 import styled from 'styled-components';
 import Slider from '../components/Slider';
 import Button from '../components/Button';
-import Map from '../utils/Map';
+// import Map from '../utils/Map';
 import { useNavigate } from 'react-router-dom';
 import { baseInstance } from '../apis/config';
 
@@ -128,7 +128,7 @@ function BookMark() {
       </BookMarkBar>
 
       <div style={{ width: '908px' }}>
-        <Map />
+        {/* <Map /> */}
       </div>
     </Container>
   );
