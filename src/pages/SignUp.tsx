@@ -23,26 +23,26 @@ export default function SignUp() {
   const [pwMessage, setPwMessage] = useState('영어/숫자/특수문자 포함 8자 이상');
   const [pwCheckMessage, setPwCheckMessage] = useState('비밀번호가 일치하지 않습니다.');
 
-  type infoPros = { 
-    userId: string; 
-    password: string, 
-    nickname: string, 
-    email:string 
-  }
+  type infoPros = {
+    userId: string;
+    password: string;
+    nickname: string;
+    email: string;
+  };
 
-  const signUp =async (info: infoPros) => {
+  const signUp = async (info: infoPros) => {
     try {
-      const response = await baseInstance.post('user/signup',info);
+      const response = await baseInstance.post('user/signup', info);
       console.log(response);
-      if(response.status === 200) {
+      if (response.status === 200) {
         alert(response.data.msg);
-        navigate('/');
+        navigate('/login');
       }
     } catch (error) {
-      console.log(error)
-      alert('중복된 id입니다. 다시 입력해주세요.')
+      console.log(error);
+      alert('중복된 id입니다. 다시 입력해주세요.');
     }
-  }
+  };
 
   // 유효성 검사
   const validateNickName = (id: string) => {
@@ -59,12 +59,12 @@ export default function SignUp() {
     setIsPw(pattern.test(pw));
   };
   const validatepwCheck = (pwCheck: string) => {
-    if(pwCheck === pwInput) {
+    if (pwCheck === pwInput) {
       setIsPwCheck(true);
-      setPwCheckMessage('비밀번호가 일치합니다')
+      setPwCheckMessage('비밀번호가 일치합니다');
     } else {
       setIsPwCheck(false);
-      setPwCheckMessage('비밀번호가 일치하지 않습니다.')
+      setPwCheckMessage('비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -72,7 +72,7 @@ export default function SignUp() {
     userId: idInput,
     password: pwInput,
     nickname: nickNameInput,
-    email : emailInput,
+    email: emailInput,
   };
   // console.log("data : ",data);
 
@@ -177,7 +177,7 @@ export default function SignUp() {
               {pwCheckInput.length >= 0 && (
                 <Validation>
                   <ValidationMessage className={`message ${isPwCheck ? 'success' : 'error'}`}>
-                    <span className="material-symbols-outlined" >check_circle</span>
+                    <span className="material-symbols-outlined">check_circle</span>
                     {pwCheckMessage}
                   </ValidationMessage>
                 </Validation>
@@ -192,11 +192,11 @@ export default function SignUp() {
               로그인하러 가기
             </SignUpButton>
             <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (data.userId === '' || data.password === '') alert('아이디와 비밀번호를 모두 입력해주세요');
-              else signUp(data);
-            }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (data.userId === '' || data.password === '') alert('아이디와 비밀번호를 모두 입력해주세요');
+                else signUp(data);
+              }}
             >
               <Button>확인</Button>
             </form>

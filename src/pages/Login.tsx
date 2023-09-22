@@ -26,7 +26,7 @@ export default function Login() {
       if (response.data.statusCode === 200) {
         localStorage.setItem('Authorization', response.headers.authorization);
         // checkUser();
-        navigate('/home');
+        navigate('/');
       }
     } catch (error) {
       console.log(error);
