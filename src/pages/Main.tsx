@@ -1,6 +1,7 @@
 import React from 'react'
 import PictureBox from '../components/PictureBox'
 import styled from 'styled-components';
+import Header from '../components/Header';
 
 type Area = {
   KoreanName: string;
@@ -101,7 +102,7 @@ function Main() {
 
   return (
     <>
-      <Nav></Nav>
+      <Header></Header>
       <CenterAligned>
         <H1>어디로 여행을 떠나시나요?</H1>
         <AreaCardBox>
