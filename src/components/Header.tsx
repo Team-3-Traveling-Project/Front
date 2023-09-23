@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <>
       <Layout>
-        <Logo src="https://ifh.cc/g/Oy9wtr.png"></Logo>
+        <Logo onClick={() => navigate('/')} src="https://ifh.cc/g/Oy9wtr.png"></Logo>
         <HeaderList>
           <List onClick={() => navigate('/bookmark')}>북마크</List>
           <List onClick={() => navigate('/mypage')}>마이페이지</List>
@@ -37,6 +37,7 @@ const Layout = styled.div`
 
 const Logo = styled.img`
   height: 35px;
+  cursor: pointer;
   /* border: 1px solid red; */
 `;
 
