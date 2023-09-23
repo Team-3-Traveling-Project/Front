@@ -4,9 +4,9 @@ import BookMarkBox from '../components/BookMarkBox';
 import styled from 'styled-components';
 import Slider from '../components/Slider';
 import Button from '../components/Button';
-// import Map from '../utils/Map';
 import { useNavigate } from 'react-router-dom';
 import { baseInstance } from '../apis/config';
+import MapContainer from '../utils/Map';
 
 function BookMark() {
   const categories: string[] = ['명소', '식당', '카페'];
@@ -128,7 +128,7 @@ function BookMark() {
       </BookMarkBar>
 
       <div style={{ width: '908px' }}>
-        {/* <Map /> */}
+        <MapContainer places={bookmarkData}/>
       </div>
     </Container>
   );

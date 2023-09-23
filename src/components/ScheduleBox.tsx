@@ -16,11 +16,13 @@ export default function ScheduleBox({ imgUrl, num, name, category, location, onC
   return (
     <>
       <Box onClick={onClick}>
+        <PictureLayout>
         <Num>{num}</Num>
         <TextBox>
           <span style={{ color: '#63BEC6', marginRight: '4px' }}>명소</span>
           <Title>{name}</Title>
         </TextBox>
+        </PictureLayout>
         <img
           style={{
             width: '55px',
@@ -39,10 +41,10 @@ export default function ScheduleBox({ imgUrl, num, name, category, location, onC
 const Box = styled.button`
   width: 330px;
   height: 62px;
-  padding: 4px;
+  padding: 10px;
   margin: 8px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   cursor: pointer;
   border-radius: 8px;
@@ -52,6 +54,11 @@ const Box = styled.button`
     box-shadow: 3px 4px 9px rgba(0, 0, 0, 0.247); /* 마우스 호버 시 그림자 증가 */
   }
 `;
+
+const PictureLayout = styled.div`
+  display: flex;
+  align-items: center;
+`
 const Num = styled.div`
   width: 20px;
   height: 20px;

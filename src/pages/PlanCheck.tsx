@@ -14,7 +14,7 @@ function PlanCheck() {
 
   const getPlans = async () => {
     try {
-      const response = await baseInstance.get('/mytravel/1', {
+      const response = await baseInstance.get('/mytravel/12', {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       console.log('response', response.data[0]);
@@ -36,7 +36,7 @@ function PlanCheck() {
   useEffect(() => {
     console.log('plancheck', places);
   }, [places]);
-  
+
   return (
     <Layout>
       <SideBar>
@@ -89,7 +89,7 @@ function PlanCheck() {
       </PlanCheckBar>
 
       <div style={{ width: '908px' }}>
-        <MapContainer places={places} />
+        <MapContainer places={places} showLine={true} />
       </div>
     </Layout>
   );
@@ -140,5 +140,5 @@ const Plan = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 5px;
 `;
