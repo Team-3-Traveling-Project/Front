@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from 'styled-components';
-import area from '../utils/Area';
 
 type SelectProps = {
-  selectList: string;
+  area: [];
+  setSelectedRegion: Dispatch<SetStateAction<string>>;
+  GetRegionPlace:()=>{};
 }
 
-const Select: React.FC<SelectProps> = ({ selectList }) => {
+const Select: React.FC<SelectProps> = ({area, setSelectedRegion, GetRegionPlace}) => {
   const [selectedArea, setSelectedArea] = useState<string>('지역을 선택해 주세요');
   // option을 클릭했을 때 selectedArea의 색깔을 바꾸기 위한 state
   const [textColor, setTextColor] = useState<string>('#BCBCBC');
@@ -31,21 +32,17 @@ const Select: React.FC<SelectProps> = ({ selectList }) => {
 
           <Ul open={open}>
             {area.map((areaItem) => {
-              if (areaItem.name === selectList) {
-                return areaItem.regions.map((item) => (
-                  <Option
-                    key={item}
-                    onClick={() => {
-                      setSelectedArea(item);
-                      setTextColor('black');
-                      setOpen(false);
-                    }}
-                  >
-                    {item}
-                  </Option>
-                ));
-              }
-              return null;
+              return <Option key={areaItem}
+                      onClick={() => {
+                        setSelectedRegion(areaItem);
+                        GetRegionPlace();
+                        setSelectedArea(areaItem);
+                        setTextColor('black');
+                        setOpen(false);
+                      }}
+                     >
+                      {areaItem}
+                    </Option>
             })}
           </Ul>
         </SelectBtn>

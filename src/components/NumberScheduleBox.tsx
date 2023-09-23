@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 
 type PlaceBtnProps = {
   imgUrl?: string;
@@ -7,36 +7,32 @@ type PlaceBtnProps = {
   category?: string;
   location?: string;
   onClick?: () => void;
-  add: () => void;
+  remove: () => void;
+  num: number;
+  clicked:any;
+  setClicked: any;
 };
 
-export default function NumberScheduleBox({ imgUrl, name, category, location, onClick, add }: PlaceBtnProps) {
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [clicked, setClicked] = useState<boolean>(false);
-
-  const bookMarkHandler = () => {
-    add();
-    setIsClicked(!isClicked);
-  };
-  const plusHandler = () => {
-    add();
-    setClicked(!clicked);
-  };
+export default function NumberScheduleBox({ imgUrl, name, category, location, onClick, remove, num, clicked, setClicked }: PlaceBtnProps) {
+  // const [num,setNum] = useState(1);
 
   return (
     <Layout>
-      <Number>1</Number>
+      {/* {num.map((item) => (
+        <Number key={item}>{item}</Number>
+      ))} */}
+      <Number>{num}</Number>
       <Box onClick={onClick}>
         <img src={imgUrl} alt="img" style={{ width: '48px', height: '48px', borderRadius: '5px' }} />
         <TextBox>
           <TitleLayout>
             <Title>{name}</Title>
             <AddLayout>
-              <Add onClick={plusHandler}>
+              <Delete onClick={remove}>
                 <span className="material-symbols-outlined" style={{ fontSize: '16px', marginTop: '8px' }}>
                   close
                 </span>
-              </Add>
+              </Delete>
             </AddLayout>
           </TitleLayout>
           <Loca>
@@ -101,7 +97,7 @@ const AddLayout = styled.div`
   align-items: center;
 `;
 
-const Add = styled.button`
+const Delete = styled.button`
   color: #393939;
   width: 20px;
   height: 20px;

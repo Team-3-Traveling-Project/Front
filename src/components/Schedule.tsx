@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
 
 type PlaceBtnProps = {
   imgUrl?: string;
@@ -7,25 +7,49 @@ type PlaceBtnProps = {
   category?: string;
   location?: string;
   onClick?: () => void;
-  add: () => void;
+  addPlan: () => void;
+  removePlan?: () => void;
+  addBookMark: () => void;
+  removeBookMark: () => void;
+  // setCheckSelected: Dispatch<SetStateAction<number>>;
+  checkToSelected?: boolean;
+  clicked: any;
+  setClicked: any;
 };
 
-export default function Schedule({ imgUrl, name, category, location, onClick, add }: PlaceBtnProps) {
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [clicked, setClicked] = useState<boolean>(false);
+export default function Schedule({ 
+  imgUrl, name, category, location, onClick, addPlan, removePlan, addBookMark, removeBookMark, checkToSelected, clicked, setClicked 
+}: PlaceBtnProps) {
+  const [isClicked, setIsClicked] = useState<boolean>(false); // 북마크 색
+  // const [plusToMinus, setPlusToMinus] = useState('+'); // 옮기기
+  // const [clicked, setClicked] = useState<boolean>(false); // 일정 색
 
   const bookMarkHandler = () => {
-    add();
+    addBookMark();
     setIsClicked(!isClicked);
+    if(isClicked === true) removeBookMark();
   };
   const plusHandler = () => {
-    add();
-    setClicked(!clicked);
+    addPlan(); // 추가
+    setClicked(clicked); // 
   };
+
+
+  // const onErrorImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   e.target.src = "https://ifh.cc/g/On2Oyz.png";
+  // }
 
   return (
     <Box onClick={onClick}>
-      <img src={imgUrl} alt="img" style={{ width: '56px', height: '56px', borderRadius: '5px' }} />
+      <img
+        src={imgUrl}
+        alt='img'
+        // onError={(e) => {
+        //   e.target.src = "https://ifh.cc/g/On2Oyz.png";
+        // }}
+        style={{ width: '56px', height: '56px', borderRadius: '5px' }}
+      />
+
       <TextBox>
         <TitleLayout>
           <Title>{name}</Title>
