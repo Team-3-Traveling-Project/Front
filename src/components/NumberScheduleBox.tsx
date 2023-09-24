@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 type PlaceBtnProps = {
   imgUrl?: string;
-  name?: string;
+  name?: any;
   category?: string;
   location?: string;
   onClick?: () => void;

@@ -12,12 +12,6 @@ import DatePick from '../components/DatePick';
 const categories = ['관광명소', '음식점', '카페'];
 const categoriesCode = [ 'AT4', 'FD6', 'CE7'];
 
-// address_name: "경기 양주시 장흥면 교현리 산 25-1"
-// img_url: "http://t1.daumcdn.net/cfile/tistory/999F5F435DC4C35B33"
-// place_name: "북한산둘레길 21구간우이령길"
-// road_address_name: ""
-// x: "126.9950525295552"
-// y: "37.685112988816826"
 export default function Plan() {
   const navigate = useNavigate();
    // -------- button, toggle ----------
@@ -35,11 +29,14 @@ export default function Plan() {
    }
 
    // ---------- 렌더링 될 때마다 바뀌는 장소 데이터 목록 -----------
-   type PlaceDataProps = {
-    address_name: string;
-    img_url: string;
+  type PlaceDataProps = {
     place_name: string;
+    address_name: string;
+    road_address_name: string;
+    x: string;
+    y: string;
     group_name: string;
+    img_url: string;
   };
 
   // local storage에서 chosed place 가져오기
@@ -109,7 +106,7 @@ export default function Plan() {
   }
 
   useEffect(() =>{GetRegionPlace();},[activeTab, selectedRegion]);
-  useEffect(() =>{GetDefaultPlace(); GetRegion(); },[]);
+  useEffect(() =>{GetDefaultPlace(); GetRegion(); GetBookmark();},[]);
 
   // ----------- 일정 추가 및 삭제 -------------
   const [addedPlan, setAddedPlan] = useState<PlaceDataProps[]>([]);
@@ -124,8 +121,8 @@ export default function Plan() {
       // 추가되어 있지 않은 경우에만 추가
       setAddedPlan([...addedPlan, place]);
       setClicked(true);
-
-      console.log("clicked", clicked);
+      // console.log("addedPlan",addedPlan)
+      // console.log("clicked", clicked);
       // console.log("일정 추가됨");
     } else {
       // 이미 추가된 경우에는 제거
@@ -134,82 +131,125 @@ export default function Plan() {
     }
   };
 
-
   // 일정 삭제
   const removePlan = (placeName:string) => {
     const newPlan =  addedPlan.filter((plan)=> plan.place_name !== placeName);
     setAddedPlan(newPlan);
-    const changeBtn = placeData.map((item) => item.place_name === placeName? setNo(false):setNo(true))
-    console.log('삭제',changeBtn);
     console.log('placeData',placeData);
-    console.log('no in removePlan',no);
   
   };
-  console.log('no in out',no);
 
   // ------------ 북마크 --------------
+  type BookMarkProps = {
+    id: number;
+    place_name: string;
+    address_name: string;
+    road_address_name: string;
+    x: string;
+    y: string;
+    group_name: string;
+    img_url: string;
+    city: string;
+    userId: string;
+  };
+
+  const [bookMark,setBookMark] = useState<BookMarkProps[]>([]);
   // 처음 렌더링 됐을 때 북마크 get 
-
-
-  // ♥️ 눌렀을 때 리스트에 추가 (브라우저)
-  const [addedBookMark, setAddedBookMark] = useState<PlaceDataProps[]>([]);
-
-  const addBookMark = (place: PlaceDataProps) => {
-    const isAlreadyAdded = addedPlan.some((plan) => plan.place_name === place.place_name);
-
-    if (!isAlreadyAdded) {
-      setAddedBookMark([...addedBookMark, place]);
-      postBookMark(place);
-      console.log("북마크 추가됨");
-    } else {
-      removeBookMark(place);
-
-      console.log("북마크 제거됨");
+  const GetBookmark = async () => {
+    try {
+      const response = await baseInstance.get(`bookmark/${query}`, {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      }); 
+      setBookMark(response.data.bookmarkList);
+      // console.log(response.data.bookmarkList);
+    } catch (error) {
+      console.log(error)
     }
   };
-  // 북마크 삭제
-  const removeBookMark = (place: PlaceDataProps) => {
-    const newBookMark =  addedBookMark.filter((plan)=> plan.place_name !== place.place_name);
-    setAddedBookMark(newBookMark);
-    
-  };
 
-  // {
-  //   ”place_name”:”장소이름”,
-  //   ”address_name”:”서울 강남구 삼성동 159”, 
-  //   ”road_address_name”:”서울 강남구 영동대로 513”,
-  //   ”x”:”127.05902969025047”,
-  //   ”y”:”37.51207412593136”
-  //   ”city”:”서울”,
-  //   ”group_name”:”카페”,
-  //   ”img_url”:”사진”
+  // ♥️ 눌렀을 때 리스트에 추가 (브라우저)
+  // const [addedBookMark, setAddedBookMark] = useState<BookMarkProps[]>([]);
+
+  // const addBookMark = (place: BookMarkProps) => {
+  //   const isAlreadyAdded = addedPlan.some((plan) => plan.place_name === place.place_name);
+
+  //   if (!isAlreadyAdded) {
+  //     setBookMark([...bookMark, place]);
+  //     postBookMark(place);
+  //     console.log("북마크 추가됨");
+  //   } else {
+  //     removeBookMark(place);
+
+  //     console.log("북마크 제거됨");
   //   }
-
+  // };
+  // // 북마크 삭제
+  // const removeBookMark = (place: PlaceDataProps) => {
+  //   const newBookMark =  bookMark.filter((plan)=> plan.place_name !== place.place_name);
+  //   setBookMark(newBookMark);
+    
+  // };
 
   // ♥️ 누를 때 마다 북마크 post 요청 (서버에 저장)
   const postBookMark =async (place: PlaceDataProps) => {
+    const newPlace = {...place,city:query}
+    console.log('newPlace',newPlace);
     try {
-      const response = await baseInstance.post('bookmark',place);
+      const response = await baseInstance.post('bookmark',newPlace, {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      });
       console.log(response);
+      if(response.data.statusCode === 200) {
+        GetBookmark()
+      }
     } catch (error) {
       console.log(error)
     }
   }
   // 북마크 delete
-  // const deleteBookMark =async (params:type) => {
-  //   try {
-  //     const data = await baseInstance.delete(`bookmark/{id}`);
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+  const deleteBookMark =async (id:number) => {
+    try {
+      const data = await baseInstance.delete(`bookmark/${id}`, {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      });
+      console.log(data);
+      if(data.data.statusCode === 200) {
+        GetBookmark()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
+  // ------------ 다음 버튼 눌렀을 때 여행일정 저장(post) ------------
+  // 선택한 날짜를 관리하는 상태
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const formattedDate = selectedDate ? selectedDate.toISOString().slice(0, 10) : '';
+  // console.log(formattedDate);
+
+  const postSchedule =async () => {
+    const plan = {
+      "date": formattedDate,
+      "city": query,
+      "placeList": addedPlan
+    }
+
+    try {
+      const response = await baseInstance.post('schedule',plan, {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error)
+    }
+  } 
+  
   return (
     <>
       <Layout>
         <LogoBar>
           <Button title="로고" onClick={()=>{navigate('/main');}} />
-          <Button title="다음" onClick={()=>{navigate('/planCheck');}}/>
+          <Button title="다음" onClick={()=>{ postSchedule(); navigate('/planCheck');}}/>
         </LogoBar>
 
         <AreaBar>
@@ -218,10 +258,10 @@ export default function Plan() {
             <Select area={area} setSelectedRegion={setSelectedRegion} GetRegionPlace={GetRegionPlace}/>
           </Area>
 
-          <Date>
+          <DateSection >
             <p>날짜</p>
-            <DatePick />
-          </Date>
+            <DatePick selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+          </DateSection>
 
           <SearchLayout>
             <Search placeholder="장소명으로 검색해보세요" 
@@ -246,7 +286,7 @@ export default function Plan() {
             ))}
           </Category>
           
-          <List>
+          <List> 
               {placeData.map((item, index) => (
               <Schedule
                   key={index}
@@ -255,13 +295,13 @@ export default function Plan() {
                   location={item.address_name}
                   imgUrl={item.img_url}
                   addPlan={() => {addPlan(item)}}
+                  removePlan={() => removePlan(item.place_name)}
 
                   clicked={clicked}
                   setClicked={setClicked}
 
-                  addBookMark={() => addBookMark(item)}
-                  removePlan={() => removePlan(item.place_name)}
-                  removeBookMark={() => removeBookMark(item)}
+                  addBookMark={() => postBookMark(item)}
+                  // removeBookMark={() => deleteBookMark(item)}
                 />
                 ))}
             </List>
@@ -298,20 +338,34 @@ export default function Plan() {
           <BookMark>
             <p>북마크</p>
             <BookMarkList>
-            {addedBookMark.map((item, index) => (
-                <NumberScheduleBox
-                  key={item.place_name}
-                  name={item.place_name}
-                  category="명소"
-                  location={item.address_name}
-                  imgUrl={item.img_url}
-                  remove={() => removeBookMark(item)}
-                  num={index+1}
+              {bookMark.map((item, index) => (
+                  <NumberScheduleBox
+                    key={item.id}
+                    name={item.place_name}
+                    category={item.group_name}
+                    location={item.address_name}
+                    imgUrl={item.img_url}
+                    remove={() => deleteBookMark(item.id)}
+                    num={index+1}
 
-                  clicked={clicked}
-                  setClicked={setClicked}
-                />
-              ))}
+                    clicked={clicked}
+                    setClicked={setClicked}
+                  />
+                ))}
+                {/* {addedBookMark.map((item, index) => (
+                    <NumberScheduleBox
+                      key={item.place_name}
+                      name={item.place_name}
+                      category="명소"
+                      location={item.address_name}
+                      imgUrl={item.img_url}
+                      remove={() => removeBookMark(item)}
+                      num={index+1}
+
+                      clicked={clicked}
+                      setClicked={setClicked}
+                    />
+                  ))} */}
             </BookMarkList>
           </BookMark>
         </PlanBar>
@@ -353,9 +407,25 @@ const Area = styled.div`
   display: flex;
   margin-top: 48px;
   gap: 20px;
+  z-index: 2;
   p {
     font-size: 20px;
     font-weight: bold;
+  }
+`;
+
+const DateSection  = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  /* border: 1px solid black; */
+  width: 322px;
+  height: 54px;
+  z-index: 1;
+  p {
+    font-size: 20px;
+    font-weight: bold; 
+    margin-right: 24px;
   }
 `;
 
@@ -466,17 +536,4 @@ const BookMarkList = styled.div`
   align-items: flex-start;
   overflow-x: hidden;
   margin-top: 10px;
-`;
-const Date = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 30px;
-  /* border: 1px solid black; */
-  width: 322px;
-  height: 54px;
-  p {
-    font-size: 20px;
-    font-weight: bold; 
-    margin-right: 24px;
-  }
 `;

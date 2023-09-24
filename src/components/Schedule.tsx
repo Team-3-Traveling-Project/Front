@@ -10,7 +10,7 @@ type PlaceBtnProps = {
   addPlan: () => void;
   removePlan?: () => void;
   addBookMark: () => void;
-  removeBookMark: () => void;
+  // removeBookMark: () => void;
   // setCheckSelected: Dispatch<SetStateAction<number>>;
   checkToSelected?: boolean;
   clicked: any;
@@ -18,7 +18,7 @@ type PlaceBtnProps = {
 };
 
 export default function Schedule({ 
-  imgUrl, name, category, location, onClick, addPlan, removePlan, addBookMark, removeBookMark, checkToSelected, clicked, setClicked 
+  imgUrl, name, category, location, onClick, addPlan, removePlan, addBookMark, checkToSelected, clicked, setClicked 
 }: PlaceBtnProps) {
   const [isClicked, setIsClicked] = useState<boolean>(false); // 북마크 색
   // const [plusToMinus, setPlusToMinus] = useState('+'); // 옮기기
@@ -27,7 +27,7 @@ export default function Schedule({
   const bookMarkHandler = () => {
     addBookMark();
     setIsClicked(!isClicked);
-    if(isClicked === true) removeBookMark();
+    // if(isClicked === true) removeBookMark();
   };
   const plusHandler = () => {
     addPlan(); // 추가
