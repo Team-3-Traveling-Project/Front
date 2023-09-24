@@ -13,8 +13,6 @@ export default function Login() {
   const [pwInput, setPwInput] = useState('');
   const navigate = useNavigate();
 
-
-
   const login = async () => {
     const info = {
       userId: idInput,
@@ -50,9 +48,6 @@ export default function Login() {
                 setIdInput(e.target.value);
               }}
             />
-            {/* <div className="validation-id">{}</div>
-
-            {idInput.length > 0 && <span className={`message ${isId ? 'success' : 'error'}`}>{idMessage}</span>} */}
           </InputLayout>
 
           <InputLayout>
@@ -78,6 +73,15 @@ export default function Login() {
 
           <form onSubmit={(e) => e.preventDefault()}>
             <Button onClick={login}>확인</Button>
+            <button
+              id="login-kakao-btn"
+              onClick={() => {
+                window.location.href =
+                  'https://kauth.kakao.com/oauth/authorize?client_id=56b6a4d5c01dd2b5b1dd41102d18d9f1&redirect_uri=http://localhost:3000/&response_type=code';
+              }}
+            >
+              카카오로 로그인하기
+            </button>
           </form>
         </WhiteBox>
         <PictureLayout>

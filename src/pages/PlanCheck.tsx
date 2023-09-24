@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import ScheduleBox from '../components/ScheduleBox';
@@ -11,10 +11,11 @@ function PlanCheck() {
   const [date, setDate] = useState('');
   const [places, setPlaces] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { plan_id } = useParams();
 
   const getPlans = async () => {
     try {
-      const response = await baseInstance.get('/mytravel/12', {
+      const response = await baseInstance.get(`/mytravel/${plan_id}`, {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       console.log('response', response.data[0]);
@@ -40,10 +41,10 @@ function PlanCheck() {
   return (
     <Layout>
       <SideBar>
-        <Button
-          title="로고"
+        <Logo
+          src="https://ifh.cc/g/4fHXOp.png"
           onClick={() => {
-            navigate('/main');
+            navigate('/');
           }}
         />
         <div>
@@ -57,7 +58,7 @@ function PlanCheck() {
           <Button
             title="Home"
             onClick={() => {
-              navigate('/main');
+              navigate('/');
             }}
           />
         </div>
@@ -100,6 +101,10 @@ export default PlanCheck;
 const Layout = styled.div`
   display: flex;
   overflow: hidden;
+`;
+const Logo = styled.img`
+  width: 70px;
+  cursor: pointer;
 `;
 
 const SideBar = styled.aside`

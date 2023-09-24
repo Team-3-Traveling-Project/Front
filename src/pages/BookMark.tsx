@@ -9,8 +9,7 @@ import { baseInstance } from '../apis/config';
 import MapContainer from '../utils/Map';
 
 function BookMark() {
-  const categories: string[] = ['명소', '식당', '카페'];
-  const texts = ['서울', '경상남도', '부산', '경상북도', '경상북도', '세종', '강원도'];
+  const [cities, setCities] = useState([]);
 
   type BookMarkDataProps = {
     address_name: string;
@@ -39,9 +38,10 @@ function BookMark() {
       const response = await baseInstance.get('bookmark', {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
-      console.log(response);
+      console.log('response', response);
       // API 응답 데이터를 배열에 저장
       setBookmarkData(response.data.bookmarkList);
+      setCities(response.data.cityList);
     } catch (error) {
       console.log(error);
     }
@@ -81,8 +81,8 @@ function BookMark() {
   return (
     <Container>
       <SideBar>
-        <Button
-          title="로고"
+        <Logo
+          src='https://ifh.cc/g/4fHXOp.png'
           onClick={() => {
             navigate('/');
           }}
@@ -98,18 +98,9 @@ function BookMark() {
       <BookMarkBar>
         <p style={{ marginLeft: '20px' }}>북마크</p>
         <SliderArea>
-          <Slider texts={texts} onClick={() => {}} />
+          <Slider texts={cities} onClick={() => {}} />
         </SliderArea>
-        <Category>
-          {categories.map((item) => (
-            <PlaceBtn
-              key={item}
-              title={item}
-              active={item === activeTab} // 현재 탭이 활성화된 경우 true, 아닌 경우 false
-              onClick={() => handlePlaceBtnClick(item)} // PlaceBtn이 클릭되었을 때 실행되는 함수
-            />
-          ))}
-        </Category>
+
         <List>
           {bookmarkData.map((item) => {
             return (
@@ -128,7 +119,7 @@ function BookMark() {
       </BookMarkBar>
 
       <div style={{ width: '908px' }}>
-        <MapContainer places={bookmarkData}/>
+        <MapContainer places={bookmarkData} />
       </div>
     </Container>
   );
@@ -139,6 +130,11 @@ export default BookMark;
 const Container = styled.div`
   display: flex;
   overflow: hidden;
+`;
+
+const Logo = styled.img`
+  width: 70px;
+  cursor: pointer;
 `;
 
 const SideBar = styled.aside`
