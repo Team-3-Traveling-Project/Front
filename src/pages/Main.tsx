@@ -1,8 +1,9 @@
-import React from 'react'
-import PictureBox from '../components/PictureBox'
+import React, { useState, useEffect } from 'react';
+import PictureBox from '../components/PictureBox';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import { baseInstance } from '../apis/config';
 
 const AreaCard: Area[] = [
   {
@@ -96,9 +97,29 @@ type Area = {
   KoreanName: string;
   EnglishName: string;
   img: string;
-}
+};
 
 function Main() {
+  const [nickName, setNickName] = useState('');
+  const [profile, setProfile] = useState('');
+
+
+  const getUser = async () => {
+    try {
+      const response = await baseInstance.get('/user/updateprofile', {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      });
+      console.log(response);
+      setNickName(response.data.nickname);
+      setProfile(response.data.profile_img_url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, [profile]);
 
   // 선택한 지역을 로컬스토리지에 저장하기 (Plan page에서 사용하기 위한 용도)
   const setPlace = (place: string) => {
@@ -107,24 +128,27 @@ function Main() {
 
   const navigate = useNavigate();
 
+
   return (
     <>
-      <Header></Header>
+      <Header profile={profile}></Header>
       <CenterAligned>
         <H1>어디로 여행을 떠나시나요?</H1>
         <AreaCardBox>
           {AreaCard.map((item) => (
+
             <PictureBox 
               imageURL={item.img}
               onClick={()=>{setPlace(item.KoreanName); navigate('/plan')}}
               text={item.EnglishName}
               koText={item.KoreanName}
             />
+
           ))}
         </AreaCardBox>
       </CenterAligned>
     </>
-  )
+  );
 }
 
 export default Main;
@@ -133,20 +157,20 @@ const CenterAligned = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const H1 = styled.h1`
   font-size: 28px;
   text-align: center;
   margin-top: 85px;
   margin-bottom: 65px;
-`
+`;
 
 const AreaCardBox = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 340px);
-`
+`;
 
 const Nav = styled.nav`
   height: 72px;
-`
+`;
