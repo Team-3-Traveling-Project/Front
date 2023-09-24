@@ -1,10 +1,13 @@
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useState } from 'react';
 import styled from 'styled-components';
 
-export default function DatePick() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+type datePickProps ={
+  selectedDate: Date | null;
+  setSelectedDate: (date: Date | null) => void;
+}
+
+export default function DatePick({ selectedDate, setSelectedDate }: datePickProps) {
 
   return (
     <Layout>
