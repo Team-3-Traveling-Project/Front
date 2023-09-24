@@ -25,7 +25,7 @@ function App() {
           <Route path="/bookMark" element={<BookMark />} />
           <Route path="/plan" element={<Plan />} />
           <Route path="/planCheck" element={<PlanCheck />} />
-          <Route path="/mypage:/user_id" element={<MyPage />} />
+          <Route path="/mypage" element={<MyPage />} />
 
         </Routes>
       </Router>

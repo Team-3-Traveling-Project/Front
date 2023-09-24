@@ -2,6 +2,7 @@ import React from 'react'
 import PictureBox from '../components/PictureBox'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 
 const AreaCard: Area[] = [
   {
@@ -108,7 +109,7 @@ function Main() {
 
   return (
     <>
-      <Nav></Nav>
+      <Header></Header>
       <CenterAligned>
         <H1>어디로 여행을 떠나시나요?</H1>
         <AreaCardBox>

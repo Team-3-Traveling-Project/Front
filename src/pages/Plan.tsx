@@ -371,7 +371,7 @@ export default function Plan() {
         </PlanBar>
 
         <MapArea className={isOpened ? 'isOpened' : ''}>
-          <MapContainer />
+          {/* <MapContainer places={''} /> */}
         </MapArea>
       </Layout>
     </>
@@ -424,7 +424,7 @@ const DateSection  = styled.div`
   z-index: 1;
   p {
     font-size: 20px;
-    font-weight: bold; 
+    font-weight: bold;
     margin-right: 24px;
   }
 `;
