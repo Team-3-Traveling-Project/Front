@@ -77,7 +77,7 @@ export default function Login() {
               id="login-kakao-btn"
               onClick={() => {
                 window.location.href =
-                  'https://kauth.kakao.com/oauth/authorize?client_id=56b6a4d5c01dd2b5b1dd41102d18d9f1&redirect_uri=http://localhost:3000/&response_type=code';
+                  'https://kauth.kakao.com/oauth/authorize?client_id=56b6a4d5c01dd2b5b1dd41102d18d9f1&redirect_uri=http://54.180.93.80/api/user/kakao/callback&response_type=code';
               }}
             >
               <i className="fa-solid fa-comment"></i>
