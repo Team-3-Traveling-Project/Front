@@ -419,7 +419,7 @@ export default function Plan() {
         </PlanBar>
 
         <MapArea className={isOpened ? 'isOpened' : ''}>
-          <MapContainer places={placeData} />
+          <MapContainer places={bookMark} plans={addedPlan}/>
         </MapArea>
       </Layout>
     </>

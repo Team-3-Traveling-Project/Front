@@ -6,7 +6,13 @@ declare global {
   }
 }
 
-const MapContainer = ({ places, showLine = false }: any) => {
+type MapProps = {
+  places: any;
+  showLine?: boolean;
+  plans?: any;
+};
+
+const MapContainer = ({ places, showLine = false, plans }: MapProps) => {
   useEffect(() => {
     let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
     let options = {
@@ -14,18 +20,11 @@ const MapContainer = ({ places, showLine = false }: any) => {
       center: new window.kakao.maps.LatLng(37.56680618429329, 126.97866075325555), //지도의 중심좌표.
       level: 10, //지도의 레벨(확대, 축소 정도)
     };
-    // console.log('map', places);
 
     let map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-    var markerPosition = new window.kakao.maps.LatLng(33.450701, 126.570667);
-
     // 마커 이미지의 이미지 주소입니다
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-
-    // var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
-    //   imageSize = new window.kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
-    //   imageOption = { offset: new window.kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
     var linePath = [];
 
@@ -36,7 +35,6 @@ const MapContainer = ({ places, showLine = false }: any) => {
       // 마커 이미지를 생성합니다
       var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
 
-      // var latlng = new window.kakao.maps.LatLng(places[i].x, places[i].y);
       var latlng = new window.kakao.maps.LatLng(parseFloat(places[i].y), parseFloat(places[i].x));
 
       console.log('이게 좌표값입니더', latlng);
@@ -56,9 +54,6 @@ const MapContainer = ({ places, showLine = false }: any) => {
         // 지도에 선을 표시합니다
         polyline.setMap(map);
       }
-      // // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-      // var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-      //   markerPosition = new window.kakao.maps.LatLng(37.54699, 127.09598); // 마커가 표시될 위치입니다
 
       // 마커를 생성합니다
       var marker = new window.kakao.maps.Marker({
@@ -68,28 +63,32 @@ const MapContainer = ({ places, showLine = false }: any) => {
         image: markerImage, // 마커 이미지
       });
     }
+
     // console.log('linePath', linePath);
     console.log('places', places);
 
-    // // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-    // var content =
-    //   '<div class="customoverlay">' +
-    //   '  <a href="https://map.kakao.com/link/map/11394059" target="_blank">' +
-    //   '    <span class="title">구의야구공원</span>' +
-    //   '  </a>' +
-    //   '</div>';
+    // 다음은 plans의 마커를 추가하는 부분입니다.
+    var planImageSrc = 'https://ifh.cc/g/2qQf8L.png'; // plans에 사용할 마커 이미지 URL을 설정하세요
 
-    // // 커스텀 오버레이가 표시될 위치입니다
-    // var position = new window.kakao.maps.LatLng(37.54699, 127.09598);
+    for (var i = 0; i < (plans || []).length; i++) {
+      // 마커 이미지의 이미지 크기 입니다
+      var planImageSize = new window.kakao.maps.Size(35, 35);
 
-    // // 커스텀 오버레이를 생성합니다
-    // var customOverlay = new window.kakao.maps.CustomOverlay({
-    //   map: map,
-    //   position: position,
-    //   content: content,
-    //   yAnchor: 1,
-    // });
-  }, [places]);
+      // 마커 이미지를 생성합니다
+      var planMarkerImage = new window.kakao.maps.MarkerImage(planImageSrc, planImageSize);
+
+      // LatLng 생성
+      var planLatLng = new window.kakao.maps.LatLng(parseFloat(plans[i].y), parseFloat(plans[i].x));
+
+      // plans 마커를 생성합니다
+      var planMarker = new window.kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: planLatLng, // 마커를 표시할 위치
+        title: plans[i].title, // 마커의 타이틀
+        image: planMarkerImage, // plans 마커 이미지
+      });
+    }
+  }, [places, plans, showLine]);
 
   return <div id="map" style={{ width: '100vw', height: '100vh' }} />;
 };
