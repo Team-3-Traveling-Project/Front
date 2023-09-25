@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 
 type TextSliderProps = {
   texts: string[];
-  onClick: () => void;
+  setCity: Dispatch<SetStateAction<string>>;
+  getCityBookMark: ()=>{}
 }
 
-const Slider: React.FC<TextSliderProps> = ({ texts, onClick }) => {
+const Slider: React.FC<TextSliderProps> = ({ texts, setCity, getCityBookMark }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [length, setLength] = useState(texts.length);
 
@@ -20,54 +21,95 @@ const Slider: React.FC<TextSliderProps> = ({ texts, onClick }) => {
   // ex) 슬라이드가 4개이고 slideWidth가 25로 계산되면, 각 슬라이드는 화면의 25% 너비를 차지하게 됨
   const slideWidth = 100 / texts.length; 
 
-  const next = () => {
-    if (currentIndex < length - 1) {
-      setCurrentIndex(prevState => Math.min(prevState + 3, length - 1));
-      // console.log(currentIndex + 3)
-    }
-  };
+//   const next = () => {
+//     if (currentIndex < length - 1) {
+//       setCurrentIndex(prevState => Math.min(prevState + 3, length - 1));
+//       // console.log(currentIndex + 3)
+//     }
+//   };
 
-  const prev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(prevState => Math.max(prevState - 3, 0));
-      // console.log(currentIndex - 3);
+//   const prev = () => {
+//     if (currentIndex > 0) {
+//       setCurrentIndex(prevState => Math.max(prevState - 3, 0));
+//       // console.log(currentIndex - 3);
       
-    }
-  };
+//     }
+//   };
 
-  return (
-    <SliderBox>
-      <LeftButton
-        onClick={prev}
-        className="left-arrow"
-        curindex={currentIndex}
-      >
-        <span className="material-symbols-outlined">navigate_before</span>
-      </LeftButton>
-      <Wrapper>
-        <ContentBox style={{ transform: `translateX(-${currentIndex * slideWidth}%)` }}>
+//   return (
+//     <SliderBox>
+//       <LeftButton
+//         onClick={prev}
+//         className="left-arrow"
+//         curindex={currentIndex}
+//       >
+//         <span className="material-symbols-outlined">navigate_before</span>
+//       </LeftButton>
+//       <Wrapper>
+//         <ContentBox style={{ transform: `translateX(-${currentIndex * slideWidth}%)` }}>
+//         {texts.map((text, index) => (
+//           <TextStyle
+//             key={index}
+//             onClick={()=>{setCity(text); getCityBookMark();}}
+//             islongtext={text.length > 2} // 3글자 이상인 텍스트에만 max-width 적용
+//           >
+//             {text}
+//           </TextStyle>
+//         ))}
+//         </ContentBox>
+//       </Wrapper>
+//       <RightButton
+//         onClick={next}
+//         className="right-arrow"
+//         curindex={currentIndex}
+//         totallength={length}
+//       >
+//         <span className="material-symbols-outlined">navigate_next</span>
+//       </RightButton>
+//     </SliderBox>
+//   );
+// };
+
+const next = () => {
+  if (currentIndex < texts.length - 1) {
+    setCurrentIndex(currentIndex + 3); // 한 번에 한 슬라이드씩 이동
+  }
+};
+
+const prev = () => {
+  if (currentIndex > 0) {
+    setCurrentIndex(currentIndex - 3); // 한 번에 한 슬라이드씩 이동
+  }
+};
+
+return (
+  <SliderBox>
+    <LeftButton onClick={prev} className="left-arrow" curindex={currentIndex}>
+      <span className="material-symbols-outlined">navigate_before</span>
+    </LeftButton>
+    <Wrapper>
+      <ContentBox style={{ transform: `translateX(-${currentIndex * slideWidth}%)` }}>
         {texts.map((text, index) => (
           <TextStyle
             key={index}
-            onClick={onClick}
-            islongtext={text.length > 2} // 3글자 이상인 텍스트에만 max-width 적용
+            onClick={() => {
+              setCity(text);
+              getCityBookMark();
+            }}
+            islongtext={text.length > 2}
           >
             {text}
           </TextStyle>
         ))}
-        </ContentBox>
-      </Wrapper>
-      <RightButton
-        onClick={next}
-        className="right-arrow"
-        curindex={currentIndex}
-        totallength={length}
-      >
-        <span className="material-symbols-outlined">navigate_next</span>
-      </RightButton>
-    </SliderBox>
-  );
+      </ContentBox>
+    </Wrapper>
+    <RightButton onClick={next} className="right-arrow" curindex={currentIndex} totallength={length}>
+      <span className="material-symbols-outlined">navigate_next</span>
+    </RightButton>
+  </SliderBox>
+);
 };
+
 
 export default Slider;
 

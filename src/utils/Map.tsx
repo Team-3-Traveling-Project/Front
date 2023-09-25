@@ -14,7 +14,7 @@ const MapContainer = ({ places, showLine = false }: any) => {
       center: new window.kakao.maps.LatLng(37.56680618429329, 126.97866075325555), //지도의 중심좌표.
       level: 15, //지도의 레벨(확대, 축소 정도)
     };
-    console.log('map', places);
+    // console.log('map', places);
 
     let map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
@@ -34,7 +34,7 @@ const MapContainer = ({ places, showLine = false }: any) => {
 
       var latlng = new window.kakao.maps.LatLng(places[i].x, places[i].y);
 
-      console.log('이게 좌표값입니더', latlng);
+      // console.log('이게 좌표값입니더', latlng);
 
       linePath.push(latlng);
 
@@ -60,7 +60,7 @@ const MapContainer = ({ places, showLine = false }: any) => {
         image: markerImage, // 마커 이미지
       });
     }
-    console.log('linePath', linePath);
+    // console.log('linePath', linePath);
   }, [places]);
 
   return <div id="map" style={{ width: '100vw', height: '100vh' }} />;
