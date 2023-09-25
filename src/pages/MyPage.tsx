@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Header from '../components/Header';
 import useInput from '../hooks/useInput';
 import { useNavigate } from 'react-router-dom';
@@ -11,9 +11,59 @@ export default function Mypage() {
   const [email, setEmail] = useState('');
   const [changeNickName, setChangeNickName] = useState('');
   const [changeEmail, setChangeEmail] = useState('');
-  const [imagePreview, setImagePreview] = useState(null);
 
   const navigate = useNavigate();
+
+  //이미지 업로드 input의 onChange
+  // const saveImgFile = () => {
+  //   const file = imgRef.current.files[0];
+  //   console.log('file', file);
+
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     saveImg(reader.result as any);
+  //   };
+  // };
+
+  //----이미지 파일 업로드
+  const [imgFile, setImgFile] = useState<string | null>('https://ifh.cc/g/LLB0LN.png');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [formData, setFormData] = useState<FormData>(new FormData());
+
+  const saveImgFile = () => {
+    if (fileInputRef.current) {
+      const file = fileInputRef.current.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImgFile(reader.result as string);
+
+          // 새로운 FormData 생성
+          const newFormData = new FormData();
+          newFormData.append('image', file);
+
+          // FormData를 상태로 설정
+          setFormData(newFormData);
+        };
+      }
+    }
+  };
+
+  const imgHandler = async () => {
+    try {
+      const response = await baseInstance.post(`/user/updateImg`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `${localStorage.getItem('Authorization')}` },
+      });
+      console.log(response);
+      if (response.data.status === 200) {
+        getUser();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const nickNameHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChangeNickName(e.target.value);
@@ -64,9 +114,10 @@ export default function Mypage() {
       const response = await baseInstance.get('/user/updateprofile', {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
-      // console.log(response);
+      console.log('내가 유저여', response);
       setNickName(response.data.nickname);
       setEmail(response.data.email);
+      setImgFile(response.data.profile_img_url);
     } catch (error) {
       console.log(error);
     }
@@ -82,14 +133,26 @@ export default function Mypage() {
         <Header></Header>
 
         <Background>
-          <Img src="https://news.samsungdisplay.com/wp-content/uploads/2018/08/14.jpg"></Img>
+          <Img src={imgFile || 'https://ifh.cc/g/LLB0LN.png'} alt="profile"></Img>
         </Background>
+
         <TextArea>
           <NickName>{nickName}</NickName>
-          <Profile>
-            프로필 사진 변경
-            <ProfileInput type="file" />
-          </Profile>
+
+          <ProfileLayout>
+            <Profile htmlFor="profileImg">
+              프로필 사진 변경
+              <ProfileInput
+                name="profileImage"
+                type="file"
+                id="profileImg"
+                accept="image/*"
+                onChange={saveImgFile}
+                ref={fileInputRef}
+              />
+            </Profile>
+            <ProfileClick onClick={imgHandler}>저장</ProfileClick>
+          </ProfileLayout>
         </TextArea>
 
         <ChangeArea>
@@ -181,8 +244,31 @@ const Profile = styled.label`
   font-size: 16px;
   text-align: center;
   color: #136bf0;
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   cursor: pointer;
 `;
+
+const ProfileClick = styled.button`
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid #136bf0;
+  color: #136bf0;
+  border-radius: 5px;
+  width: 35px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 12px;
+  &:hover {
+    background-color: #136bf0;
+    color: white;
+  }
+`;
+
+const ProfileLayout = styled.div``;
 
 const ProfileInput = styled.input`
   display: none;

@@ -250,6 +250,10 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       console.log(response);
+
+      if (response.data.statusCode === 200) {
+        navigate(`/planCheck/${response.data.planId}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -269,7 +273,6 @@ export default function Plan() {
             title="다음"
             onClick={() => {
               postSchedule();
-              navigate('/planCheck');
             }}
           />
         </LogoBar>
