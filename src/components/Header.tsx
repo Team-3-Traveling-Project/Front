@@ -31,7 +31,6 @@ export default function Header(profile: any) {
           >
             로그아웃
           </List>
-          <SmallProfile src={img} />
         </HeaderList>
       </Layout>
     </>
@@ -42,6 +41,7 @@ const Layout = styled.div`
   width: 100%;
   height: 72px;
   display: flex;
+  border-bottom: 3px solid #63BEC6;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -62,17 +62,13 @@ const HeaderList = styled.div`
   align-items: center;
 `;
 
-const SmallProfile = styled.img`
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-`;
-
 const List = styled.button`
   cursor: pointer;
+  color: #4d959b;
+  font-weight: 400;
   transition: color 0.1s ease;
   &:hover {
-    color: #63bec6;
+    color: black;
     /* text-decoration: underline;
     text-underline-offset : 3px; */
   }

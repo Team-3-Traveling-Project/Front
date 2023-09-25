@@ -395,7 +395,9 @@ export default function Plan() {
           </BookMark>
         </PlanBar>
 
-        <MapArea className={isOpened ? 'isOpened' : ''}>{/* <MapContainer places={''} /> */}</MapArea>
+        <MapArea className={isOpened ? 'isOpened' : ''}>
+          <MapContainer places={placeData} />
+        </MapArea>
       </Layout>
     </>
   );

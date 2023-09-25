@@ -12,7 +12,7 @@ const MapContainer = ({ places, showLine = false }: any) => {
     let options = {
       //지도를 생성할 때 필요한 기본 옵션
       center: new window.kakao.maps.LatLng(37.56680618429329, 126.97866075325555), //지도의 중심좌표.
-      level: 15, //지도의 레벨(확대, 축소 정도)
+      level: 10, //지도의 레벨(확대, 축소 정도)
     };
     // console.log('map', places);
 
@@ -23,6 +23,10 @@ const MapContainer = ({ places, showLine = false }: any) => {
     // 마커 이미지의 이미지 주소입니다
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
 
+    // var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
+    //   imageSize = new window.kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+    //   imageOption = { offset: new window.kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
     var linePath = [];
 
     for (var i = 0; i < places.length; i++) {
@@ -32,9 +36,10 @@ const MapContainer = ({ places, showLine = false }: any) => {
       // 마커 이미지를 생성합니다
       var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
 
-      var latlng = new window.kakao.maps.LatLng(places[i].x, places[i].y);
+      // var latlng = new window.kakao.maps.LatLng(places[i].x, places[i].y);
+      var latlng = new window.kakao.maps.LatLng(parseFloat(places[i].y), parseFloat(places[i].x));
 
-      // console.log('이게 좌표값입니더', latlng);
+      console.log('이게 좌표값입니더', latlng);
 
       linePath.push(latlng);
 
@@ -51,6 +56,9 @@ const MapContainer = ({ places, showLine = false }: any) => {
         // 지도에 선을 표시합니다
         polyline.setMap(map);
       }
+      // // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      // var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+      //   markerPosition = new window.kakao.maps.LatLng(37.54699, 127.09598); // 마커가 표시될 위치입니다
 
       // 마커를 생성합니다
       var marker = new window.kakao.maps.Marker({
@@ -61,6 +69,26 @@ const MapContainer = ({ places, showLine = false }: any) => {
       });
     }
     // console.log('linePath', linePath);
+    console.log('places', places);
+
+    // // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+    // var content =
+    //   '<div class="customoverlay">' +
+    //   '  <a href="https://map.kakao.com/link/map/11394059" target="_blank">' +
+    //   '    <span class="title">구의야구공원</span>' +
+    //   '  </a>' +
+    //   '</div>';
+
+    // // 커스텀 오버레이가 표시될 위치입니다
+    // var position = new window.kakao.maps.LatLng(37.54699, 127.09598);
+
+    // // 커스텀 오버레이를 생성합니다
+    // var customOverlay = new window.kakao.maps.CustomOverlay({
+    //   map: map,
+    //   position: position,
+    //   content: content,
+    //   yAnchor: 1,
+    // });
   }, [places]);
 
   return <div id="map" style={{ width: '100vw', height: '100vh' }} />;
