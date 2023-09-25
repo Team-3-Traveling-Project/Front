@@ -41,15 +41,17 @@ export default function Schedule({
 
   return (
     <Box onClick={onClick}>
-      <img
-        src={imgUrl}
-        alt='img'
-        // onError={(e) => {
-        //   e.target.src = "https://ifh.cc/g/On2Oyz.png";
-        // }}
-        style={{ width: '56px', height: '56px', borderRadius: '5px' }}
-      />
-
+      <div style={{width:'56px'}}>
+        <img
+          src={imgUrl}
+          alt='img'
+          // onError={(e) => {
+          //   e.target.src = "https://ifh.cc/g/On2Oyz.png";
+          // }}
+          style={{ width: '56px', height: '56px', borderRadius: '5px' }}
+        />
+      </div>
+      
       <TextBox>
         <TitleLayout>
           <Title>{name}</Title>
@@ -66,7 +68,7 @@ export default function Schedule({
         </TitleLayout>
         <Loca>
           <span style={{ color: '#63BEC6', marginRight: '4px' }}>{category}</span>
-          {location}
+          <Location>{location}</Location>
         </Loca>
       </TextBox>
     </Box>
@@ -79,6 +81,9 @@ const Box = styled.button`
   border-radius: 6px;
   padding: 18px;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   transition: box-shadow 0.3s ease-in-out;
   &:hover {
@@ -88,7 +93,7 @@ const Box = styled.button`
 
 const TextBox = styled.div`
   width: 330px;
-  height: 54px;
+  height: 100%;
   margin-left: 12px;
 `;
 
@@ -99,10 +104,22 @@ const TitleLayout = styled.div`
 const Title = styled.div`
   font-size: 20px;
   font-weight: 600;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
 `;
+
 const Loca = styled.div`
   font-size: 14px;
 `;
+
+const Location = styled.div`
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+`
 
 const AddLayout = styled.div`
   display: flex;

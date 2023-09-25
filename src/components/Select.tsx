@@ -4,10 +4,12 @@ import { styled } from 'styled-components';
 type SelectProps = {
   area: [];
   setSelectedRegion: Dispatch<SetStateAction<string>>;
-  GetRegionPlace:()=>{};
+  GetRegionPlace:(groupCode: string) => Promise<void>;
+  categoriesCode: string[];
+  activeTab: number;
 }
 
-const Select: React.FC<SelectProps> = ({area, setSelectedRegion, GetRegionPlace}) => {
+const Select: React.FC<SelectProps> = ({area, setSelectedRegion, GetRegionPlace, categoriesCode, activeTab}) => {
   const [selectedArea, setSelectedArea] = useState<string>('지역을 선택해 주세요');
   // option을 클릭했을 때 selectedArea의 색깔을 바꾸기 위한 state
   const [textColor, setTextColor] = useState<string>('#BCBCBC');
@@ -34,8 +36,9 @@ const Select: React.FC<SelectProps> = ({area, setSelectedRegion, GetRegionPlace}
             {area.map((areaItem) => {
               return <Option key={areaItem}
                       onClick={() => {
+                        const groupCode = categoriesCode[activeTab]; // 여기에서 groupCode 값을 가져옴
                         setSelectedRegion(areaItem);
-                        GetRegionPlace();
+                        GetRegionPlace(groupCode); // groupCode를 전달하여 호출
                         setSelectedArea(areaItem);
                         setTextColor('black');
                         setOpen(false);
