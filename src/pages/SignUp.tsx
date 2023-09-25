@@ -202,7 +202,7 @@ export default function SignUp() {
             </form>
           </WhiteBox>
           <PictureLayout>
-            <Title>Plan Planing</Title>
+            <Title>Day Trip</Title>
             <Title2>오늘 어디갈지 모르겠다면?!</Title2>
             <img
               style={{ marginLeft: '90px', width: '30rem', marginTop: '3rem' }}
@@ -282,7 +282,7 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   outline: none;
-  margin: 30px 0;
+  margin: 20px 0 30px 0;
   transition: box-shadow 0.3s;
   &:hover {
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.25);
