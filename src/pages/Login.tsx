@@ -71,21 +71,22 @@ export default function Login() {
             회원가입하러 가기
           </SignUpButton>
 
-          <form onSubmit={(e) => e.preventDefault()}>
+          <Form onSubmit={(e) => e.preventDefault()}>
             <Button onClick={login}>확인</Button>
-            <button
+            <KakaoLogin
               id="login-kakao-btn"
               onClick={() => {
                 window.location.href =
                   'https://kauth.kakao.com/oauth/authorize?client_id=56b6a4d5c01dd2b5b1dd41102d18d9f1&redirect_uri=http://localhost:3000/&response_type=code';
               }}
             >
-              카카오로 로그인하기
-            </button>
-          </form>
+              <i className="fa-solid fa-comment"></i>
+              <p>카카오 로그인</p>
+            </KakaoLogin>
+          </Form>
         </WhiteBox>
         <PictureLayout>
-          <Title>Plan Planing</Title>
+          <Title>Day Trip</Title>
           <Title2>오늘 어디갈지 모르겠다면?!</Title2>
           <img
             style={{ marginLeft: '90px', width: '30rem', marginTop: '3rem' }}
@@ -130,7 +131,7 @@ const WhiteBox = styled.div`
 const H2 = styled.h2`
   font-style: bold;
   font-size: 24px;
-  margin-bottom: 96px;
+  margin-bottom: 80px;
 `;
 
 const InputLayout = styled.div`
@@ -154,10 +155,10 @@ const Label = styled.label`
 `;
 
 const Button = styled.button`
-  width: 240px;
+  width: 338px;
   height: 50px;
   text-align: center;
-  border-radius: 47px;
+  border-radius: 12px;
   font-size: 20px;
   font-style: bold;
   color: white;
@@ -165,7 +166,28 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   outline: none;
-  margin: 30px 0;
+  margin: 20px 0 15px 0;
+  transition: box-shadow 0.3s;
+  &:hover {
+    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.25);
+  }
+`;
+
+const KakaoLogin = styled.button`
+  width: 338px;
+  height: 50px;
+  border-radius: 12px; // 가이드는 12px
+  font-size: 20px;
+  font-style: bold;
+  color: black;
+  background-color: #FEE500;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   transition: box-shadow 0.3s;
   &:hover {
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.25);
@@ -202,6 +224,12 @@ const SignUpButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   font-style: bold;
-  margin-top: 20px;
+  margin-top: 10px;
   text-decoration-line: underline;
 `;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
