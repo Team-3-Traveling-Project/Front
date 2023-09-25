@@ -16,6 +16,8 @@ type PlaceBtnProps = {
 export default function NumberScheduleBox({ imgUrl, name, category, location, onClick, remove, num, clicked, setClicked }: PlaceBtnProps) {
   // const [num,setNum] = useState(1);
 
+  const fallbackImageUrl = 'https://ifh.cc/v-On2Oyz)%EC%9D%B4';
+
   return (
     <Layout>
       {/* {num.map((item) => (
@@ -23,13 +25,21 @@ export default function NumberScheduleBox({ imgUrl, name, category, location, on
       ))} */}
       <Number>{num}</Number>
       <Box onClick={onClick}>
-        <img src={imgUrl} alt="img" style={{ width: '48px', height: '48px', borderRadius: '5px' }} />
+        <div style={{width:'48px'}}>
+          <Img 
+            src={imgUrl} 
+            // onError={(e) => {
+            //   const imgElement = e.target as HTMLImageElement;
+            //   imgElement.src = fallbackImageUrl;
+            // }}
+            alt="img" />
+        </div>
         <TextBox>
           <TitleLayout>
             <Title>{name}</Title>
             <AddLayout>
               <Delete onClick={remove}>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', marginTop: '8px' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                   close
                 </span>
               </Delete>
@@ -37,7 +47,7 @@ export default function NumberScheduleBox({ imgUrl, name, category, location, on
           </TitleLayout>
           <Loca>
             <span style={{ color: '#63BEC6', marginRight: '4px' }}>{category}</span>
-            {location}
+            <Location>{location}</Location>
           </Loca>
         </TextBox>
       </Box>
@@ -72,6 +82,12 @@ const Box = styled.button`
   }
 `;
 
+const Img = styled.img`
+  width: 48px; 
+  height: 48px; 
+  border-radius: 5px;
+`
+
 const TextBox = styled.div`
   width: 300px;
   height: 58px;
@@ -79,7 +95,9 @@ const TextBox = styled.div`
 `;
 
 const TitleLayout = styled.div`
-  display: flex;
+  /* display: flex; */
+  width: 250px;
+  position: relative;
   gap: 5px;
 `;
 const Title = styled.div`
@@ -87,14 +105,24 @@ const Title = styled.div`
   font-weight: 700;
 `;
 const Loca = styled.div`
+  display: flex;
   font-size: 14px;
 `;
+
+const Location = styled.div`
+  width: 60%;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+`
 
 const AddLayout = styled.div`
   display: flex;
   gap: 5px;
   margin-left: auto;
   align-items: center;
+  
 `;
 
 const Delete = styled.button`
@@ -105,4 +133,7 @@ const Delete = styled.button`
   text-align: center;
   line-height: 20px;
   cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 `;

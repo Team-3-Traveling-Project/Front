@@ -15,7 +15,7 @@ const categoriesCode = ['AT4', 'FD6', 'CE7'];
 export default function Plan() {
   const navigate = useNavigate();
   // -------- button, toggle ----------
-  const [activeTab, setActiveTab] = useState<any>(0); // 선택된 탭을 관리하는 상태
+  const [activeTab, setActiveTab] = useState<any>(0); // 선택한 카테고리 인덱스
   const [isOpened, setIsOpened] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
 
@@ -60,7 +60,6 @@ export default function Plan() {
 
   // -------------- 도시별 구 조회 -----------------
   const [area, setArea] = useState<[]>([]);
-
   const GetRegion = async () => {
     try {
       const response = await baseInstance.get(`findregion/${query}`, {
@@ -74,9 +73,8 @@ export default function Plan() {
   };
 
   // ---------- 검색 -----------
-  // 선택한 구 데이터저장하여 해당 구의 category place list 가져오기
+  // 선택한 구의 category place list 가져오기
   const [selectedRegion, setSelectedRegion] = useState<string>('');
-
   const GetSearchPlace = async () => {
     try {
       const response = await baseInstance.get(
@@ -94,16 +92,31 @@ export default function Plan() {
 
   // -------- categry별 장소 데이터 가져오기 ----------
   // AT4(관광명소), CE7(카페), FD6(식당)
-  const GetRegionPlace = async () => {
+  const [placeDataTourism, setPlaceDataTourism] = useState<PlaceDataProps[]>([]);
+  const [placeDataRestaurant, setPlaceDataRestaurant] = useState<PlaceDataProps[]>([]);
+  const [placeDataCafe, setPlaceDataCafe] = useState<PlaceDataProps[]>([]);
+  const GetRegionPlace = async (groupCode: string) => {
     try {
       const response = await baseInstance.get(
-        `findplace/group?query=${query}&region=${selectedRegion}&group=${categoriesCode[activeTab]}`,
+        `findplace/group?query=${query}&region=${selectedRegion}&group=${groupCode}`,
         {
           headers: { Authorization: `${localStorage.getItem('Authorization')}` },
         },
       );
+      // 카테고리에 따라서 데이터를 분기하여 저장
+    if (groupCode === 'AT4') {
+      setPlaceDataTourism(response.data);
       SetPlaceData(response.data);
-      // console.log(response);
+    } else if (groupCode === 'FD6') {
+      setPlaceDataRestaurant(response.data);
+      SetPlaceData(response.data);
+    } else if (groupCode === 'CE7') {
+      setPlaceDataCafe(response.data);
+      SetPlaceData(response.data);
+      
+    }
+      // SetPlaceData(response.data);
+      console.log(response);
       // console.log('activeTab',activeTab);
       // console.log('selectedRegion',selectedRegion);
     } catch (error) {
@@ -112,8 +125,13 @@ export default function Plan() {
   };
 
   useEffect(() => {
-    GetRegionPlace();
-  }, [activeTab, selectedRegion]);
+  // 초기 렌더링 시에는 groupCode를 설정하지 않고 호출하므로 오류가 발생
+  // 따라서 초기 렌더링 시에는 GetRegionPlace를 호출하지 않도록 처리
+  if (activeTab !== null && selectedRegion !== '') {
+    const groupCode = categoriesCode[activeTab];
+    GetRegionPlace(groupCode);
+  }
+}, [activeTab, selectedRegion]);
   useEffect(() => {
     GetDefaultPlace();
     GetRegion();
@@ -139,7 +157,7 @@ export default function Plan() {
     } else {
       // 이미 추가된 경우에는 제거
       removePlan(place.place_name);
-      console.log('일정 제거됨');
+      // console.log('일정 제거됨');
     }
   };
 
@@ -147,7 +165,7 @@ export default function Plan() {
   const removePlan = (placeName: string) => {
     const newPlan = addedPlan.filter((plan) => plan.place_name !== placeName);
     setAddedPlan(newPlan);
-    console.log('placeData', placeData);
+    // console.log('placeData', placeData);
   };
 
   // ------------ 북마크 --------------
@@ -280,11 +298,15 @@ export default function Plan() {
         <AreaBar>
           <Area>
             <p>{query}</p>
-            <Select area={area} setSelectedRegion={setSelectedRegion} GetRegionPlace={GetRegionPlace} />
+            <Select area={area} 
+            setSelectedRegion={setSelectedRegion} 
+            GetRegionPlace={GetRegionPlace}
+            categoriesCode={categoriesCode}
+            activeTab={activeTab} />
           </Area>
 
           <DateSection>
-            <p>날짜</p>
+            <p style={{marginRight:'20px'}}>날짜</p>
             <DatePick selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           </DateSection>
 
@@ -309,7 +331,8 @@ export default function Plan() {
                 title={item}
                 onClick={() => {
                   setActiveTab(index);
-                  GetRegionPlace();
+                  const groupCode = categoriesCode[index];
+                  GetRegionPlace(groupCode); // 선택한 카테고리에 해당하는 데이터를 가져오도록 수정
                 }}
                 active={activeTab === index} // 현재 탭이 활성화된 경우 true, 아닌 경우 false
               />
@@ -449,7 +472,7 @@ const DateSection = styled.div`
   align-items: center;
   margin-top: 30px;
   /* border: 1px solid black; */
-  width: 322px;
+  width: 316px;
   height: 54px;
   z-index: 1;
   p {

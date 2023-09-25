@@ -19,7 +19,7 @@ export default function DatePick({ selectedDate, setSelectedDate }: datePickProp
         selected={selectedDate}
         onChange={(date) => setSelectedDate(date)}
       />
-      <span className="material-symbols-outlined" style={{ marginRight: '60px' }}>
+      <span className="material-symbols-outlined" style={{ marginRight: '30px' }}>
         calendar_today
       </span>
     </Layout>
@@ -39,7 +39,7 @@ const Layout = styled.div`
 `;
 
 const StyledDatePicker = styled(DatePicker)`
-  padding-left: 10px;
+  /* padding-left: 10px; */
   font-size: 16px;
   text-align: center;
   border: none;
