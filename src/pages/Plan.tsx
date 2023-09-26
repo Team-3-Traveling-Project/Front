@@ -479,7 +479,7 @@ const Logo = styled.img`
 `;
 
 const LogoBar = styled.div`
-  width: 100px;
+  width: 120px;
   height: 100vh;
   display: flex;
   flex-direction: column;

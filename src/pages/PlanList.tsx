@@ -19,6 +19,7 @@ export default function PlanList() {
       });
       setNickName(response.data.nickname);
       setImgFile(response.data.profile_img_url);
+      
     } catch (error) {
       console.log(error);
       alert('로그인 후 이용해주세요');
@@ -31,6 +32,7 @@ export default function PlanList() {
       const response = await baseInstance.get('/mytravel', {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
+      console.log('이미지 넘어가는 지 ㅇ확인',response)
       console.log(response.data);
       setPlans(response.data);
     } catch (error) {

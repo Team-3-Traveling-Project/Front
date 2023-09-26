@@ -123,9 +123,9 @@ function BookMark() {
         </List>
       </BookMarkBar>
 
-      <div style={{ width: '908px' }}>
+      <MapArea>
         <MapContainer places={bookmarkData} />
-      </div>
+      </MapArea>
     </Container>
   );
 }
@@ -191,3 +191,9 @@ const List = styled.div`
   align-items: flex-start;
   /* border: 1px solid black; */
 `;
+
+const MapArea = styled.div`
+  flex: 1;
+  height: 100vh;
+  background-color: #b7d6ff;
+`

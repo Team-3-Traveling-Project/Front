@@ -91,9 +91,9 @@ function PlanCheck() {
         </Plan>
       </PlanCheckBar>
 
-      <div style={{ width: '908px' }}>
+      <MapArea >
         <MapContainer places={places} showLine={true} />
-      </div>
+      </MapArea>
     </Layout>
   );
 }
@@ -149,3 +149,8 @@ const Plan = styled.div`
   align-items: center;
   gap: 5px;
 `;
+const MapArea = styled.div`
+  flex: 1;
+  height: 100vh;
+  background-color: #b7d6ff;
+`

@@ -97,7 +97,7 @@ const MapContainer = ({ places, showLine = false, plans, mapLocation }: MapProps
     }
   }, [places, plans, showLine, mapLocation]);
 
-  return <div id="map" style={{ width: '100vw', height: '100vh' }} />;
+  return <div id="map" style={{ width: '100%', height: '100%' }} />;
 };
 
 export default MapContainer;
