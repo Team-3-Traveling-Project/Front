@@ -18,6 +18,32 @@ export default function Plan() {
   const plan_id = location.state?.plan_id;
   console.log('제발 되라', plan_id);
 
+  //----plan id 있을 때 일정 가져오기----------------
+  const [city, setCity] = useState('');
+  const [date, setDate] = useState('');
+  const [places, setPlaces] = useState<any[]>([]);
+
+  const getPlans = async () => {
+    try {
+      const response = await baseInstance.get(`/mytravel/${plan_id}`, {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      });
+      console.log('id있을 때 값 가져온거얌 히히히ㅣ히히힣', response.data[0]);
+      console.log('placeList', response.data[0].placeList);
+      setDate(response.data[0].date);
+      setCity(response.data[0].city);
+      setPlaces(response.data[0].placeList);
+
+      // console.log('places', typeof places);
+      console.log('places img', places[0].img_url);
+      console.log('places group name', places[0].group_name);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  //-------------------------------------------
+
   const navigate = useNavigate();
   // -------- button, toggle ----------
   const [activeTab, setActiveTab] = useState<any>(0); // 선택한 카테고리 인덱스
@@ -139,11 +165,18 @@ export default function Plan() {
       GetRegionPlace(groupCode);
     }
   }, [activeTab, selectedRegion]);
+
   useEffect(() => {
     GetDefaultPlace();
     GetRegion();
     GetBookmark();
   }, []);
+
+  useEffect(() => {
+    if (plan_id) {
+      getPlans();
+    }
+  }, [plan_id]);
 
   // ----------- 일정 추가 및 삭제 -------------
   const [addedPlan, setAddedPlan] = useState<PlaceDataProps[]>([]);
@@ -197,7 +230,7 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       setBookMark(response.data.bookmarkList);
-      console.log('bookMark',response.data.bookmarkList);
+      console.log('bookMark', response.data.bookmarkList);
     } catch (error) {
       console.log(error);
     }
