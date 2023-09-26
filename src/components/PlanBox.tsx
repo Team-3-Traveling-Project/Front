@@ -5,9 +5,10 @@ type PlanBoxProps = {
   city?: string;
   details?: any;
   onDelete?: any;
+  img: string;
 };
 
-export default function PlanBox({ date, city, details, onDelete }: PlanBoxProps) {
+export default function PlanBox({ date, city, details, onDelete, img }: PlanBoxProps) {
   const handleDeleteClick = (event: any) => {
     event.stopPropagation(); // 클릭 이벤트 버블링 방지
     onDelete(); // 삭제 함수 호출
@@ -15,7 +16,7 @@ export default function PlanBox({ date, city, details, onDelete }: PlanBoxProps)
   return (
     <>
       <Plans onClick={details}>
-        <Image src="https://cdn.myro.co.kr/prod/image/city/Seoul.jpg" />
+        <Image src={img} />
         <BoxLayout>
           <Date>{date}</Date>
           <City>{city}</City>

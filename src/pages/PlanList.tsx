@@ -79,6 +79,7 @@ export default function PlanList() {
               key={index}
               date={item.date}
               city={item.city}
+              img={item.cityimgUrl}
               details={() => goDetails(item.id)}
               onDelete={() => deletePlan(item.id)}
             />
