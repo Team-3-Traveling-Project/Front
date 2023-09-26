@@ -21,7 +21,6 @@ export default function Plan() {
   //----plan id 있을 때 일정 가져오기----------------
   const [city, setCity] = useState('');
   const [date, setDate] = useState('');
-  const [places, setPlaces] = useState<any[]>([]);
 
   const getPlans = async () => {
     try {
@@ -32,11 +31,11 @@ export default function Plan() {
       console.log('placeList', response.data[0].placeList);
       setDate(response.data[0].date);
       setCity(response.data[0].city);
-      setPlaces(response.data[0].placeList);
+      setAddedPlan(response.data[0].placeList);
 
       // console.log('places', typeof places);
-      console.log('places img', places[0].img_url);
-      console.log('places group name', places[0].group_name);
+      // console.log('places img', places[0].img_url);
+      // console.log('places group name', places[0].group_name);
     } catch (error) {
       console.log('error', error);
     }
