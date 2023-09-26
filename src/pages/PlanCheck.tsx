@@ -52,7 +52,7 @@ function PlanCheck() {
         <div>
           <EditBtn
             onClick={() => {
-              navigate('/plan');
+              navigate('/plan', { state: { plan_id: plan_id } });
             }}
           >
             편집

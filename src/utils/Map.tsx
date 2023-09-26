@@ -10,14 +10,21 @@ type MapProps = {
   places: any;
   showLine?: boolean;
   plans?: any;
+  mapLocation?: any;
 };
 
-const MapContainer = ({ places, showLine = false, plans }: MapProps) => {
+const MapContainer = ({ places, showLine = false, plans, mapLocation }: MapProps) => {
   useEffect(() => {
     let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+    // var defaultLocation = new window.kakao.maps.LatLng(parseFloat(places[0]), parseFloat(places[1]));
+    console.log('이게 좌표여', mapLocation);
+
+    const centerLat = mapLocation ? mapLocation[1] : 37.56680618429329;
+    const centerLng = mapLocation ? mapLocation[0] : 126.97866075325555;
+
     let options = {
       //지도를 생성할 때 필요한 기본 옵션
-      center: new window.kakao.maps.LatLng(37.56680618429329, 126.97866075325555), //지도의 중심좌표.
+      center: new window.kakao.maps.LatLng(centerLat, centerLng), //지도의 중심좌표.
       level: 10, //지도의 레벨(확대, 축소 정도)
     };
 
@@ -88,7 +95,7 @@ const MapContainer = ({ places, showLine = false, plans }: MapProps) => {
         image: planMarkerImage, // plans 마커 이미지
       });
     }
-  }, [places, plans, showLine]);
+  }, [places, plans, showLine, mapLocation]);
 
   return <div id="map" style={{ width: '100vw', height: '100vh' }} />;
 };
