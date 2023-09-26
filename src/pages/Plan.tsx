@@ -53,6 +53,7 @@ export default function Plan() {
       });
       SetPlaceData(response.data);
       // console.log('처음 렌더링 될 때',response);
+      console.log('여기 좌표있나봐봐', response);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +67,6 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       setArea(response.data);
-      // console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -104,17 +104,16 @@ export default function Plan() {
         },
       );
       // 카테고리에 따라서 데이터를 분기하여 저장
-    if (groupCode === 'AT4') {
-      setPlaceDataTourism(response.data);
-      SetPlaceData(response.data);
-    } else if (groupCode === 'FD6') {
-      setPlaceDataRestaurant(response.data);
-      SetPlaceData(response.data);
-    } else if (groupCode === 'CE7') {
-      setPlaceDataCafe(response.data);
-      SetPlaceData(response.data);
-      
-    }
+      if (groupCode === 'AT4') {
+        setPlaceDataTourism(response.data);
+        SetPlaceData(response.data);
+      } else if (groupCode === 'FD6') {
+        setPlaceDataRestaurant(response.data);
+        SetPlaceData(response.data);
+      } else if (groupCode === 'CE7') {
+        setPlaceDataCafe(response.data);
+        SetPlaceData(response.data);
+      }
       // SetPlaceData(response.data);
       console.log(response);
       // console.log('activeTab',activeTab);
@@ -125,13 +124,13 @@ export default function Plan() {
   };
 
   useEffect(() => {
-  // 초기 렌더링 시에는 groupCode를 설정하지 않고 호출하므로 오류가 발생
-  // 따라서 초기 렌더링 시에는 GetRegionPlace를 호출하지 않도록 처리
-  if (activeTab !== null && selectedRegion !== '') {
-    const groupCode = categoriesCode[activeTab];
-    GetRegionPlace(groupCode);
-  }
-}, [activeTab, selectedRegion]);
+    // 초기 렌더링 시에는 groupCode를 설정하지 않고 호출하므로 오류가 발생
+    // 따라서 초기 렌더링 시에는 GetRegionPlace를 호출하지 않도록 처리
+    if (activeTab !== null && selectedRegion !== '') {
+      const groupCode = categoriesCode[activeTab];
+      GetRegionPlace(groupCode);
+    }
+  }, [activeTab, selectedRegion]);
   useEffect(() => {
     GetDefaultPlace();
     GetRegion();
@@ -287,6 +286,7 @@ export default function Plan() {
               navigate('/');
             }}
           />
+
           <Button
             title="다음"
             onClick={() => {
@@ -298,15 +298,17 @@ export default function Plan() {
         <AreaBar>
           <Area>
             <p>{query}</p>
-            <Select area={area} 
-            setSelectedRegion={setSelectedRegion} 
-            GetRegionPlace={GetRegionPlace}
-            categoriesCode={categoriesCode}
-            activeTab={activeTab} />
+            <Select
+              area={area}
+              setSelectedRegion={setSelectedRegion}
+              GetRegionPlace={GetRegionPlace}
+              categoriesCode={categoriesCode}
+              activeTab={activeTab}
+            />
           </Area>
 
           <DateSection>
-            <p style={{marginRight:'20px'}}>날짜</p>
+            <p style={{ marginRight: '20px' }}>날짜</p>
             <DatePick selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           </DateSection>
 
@@ -362,9 +364,9 @@ export default function Plan() {
 
         <PlanBar className={isOpened ? 'isOpened' : 'close'}>
           <Toggle onClick={toggleHandler}>
-            <span className="material-symbols-outlined" style={{ color: '#b1b1b1', fontSize: '20px' }}>
+            {/* <span className="material-symbols-outlined" style={{ color: '#b1b1b1', fontSize: '20px' }}>
               keyboard_double_arrow_left
-            </span>
+            </span> */}
           </Toggle>
           <ScheduleArea>
             <p>일정</p>
@@ -419,7 +421,7 @@ export default function Plan() {
         </PlanBar>
 
         <MapArea className={isOpened ? 'isOpened' : ''}>
-          <MapContainer places={bookMark} plans={addedPlan}/>
+          <MapContainer places={bookMark} plans={addedPlan} />
         </MapArea>
       </Layout>
     </>
@@ -547,7 +549,7 @@ const Toggle = styled.button`
   height: 20px;
   margin-left: 355px;
   margin-top: 5px;
-  cursor: pointer;
+  /* cursor: pointer; */
 `;
 
 const ScheduleArea = styled.div`

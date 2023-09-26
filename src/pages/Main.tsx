@@ -112,7 +112,10 @@ function Main() {
       setNickName(response.data.nickname);
       setProfile(response.data.profile_img_url);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      alert('로그인 후 이용해주세요')
+      navigate('/login');
+
     }
   };
 
