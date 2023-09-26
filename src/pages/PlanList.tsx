@@ -18,6 +18,8 @@ export default function PlanList() {
       setNickName(response.data.nickname);
     } catch (error) {
       console.log(error);
+      alert('로그인 후 이용해주세요');
+      navigate('/login');
     }
   };
 
@@ -55,6 +57,8 @@ export default function PlanList() {
     getUser();
     getPlans();
   }, []);
+
+  
   return (
     <>
       <Layout>
