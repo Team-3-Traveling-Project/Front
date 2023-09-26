@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 export default function PlanList() {
   const [nickName, setNickName] = useState('');
   const [plans, setPlans] = useState<any[]>([]);
+  const [imgFile, setImgFile] = useState<string | undefined>('https://ifh.cc/g/LLB0LN.png');
+
   const navigate = useNavigate();
 
   const getUser = async () => {
@@ -16,6 +18,7 @@ export default function PlanList() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       setNickName(response.data.nickname);
+      setImgFile(response.data.profile_img_url);
     } catch (error) {
       console.log(error);
       alert('로그인 후 이용해주세요');
@@ -58,14 +61,13 @@ export default function PlanList() {
     getPlans();
   }, []);
 
-  
   return (
     <>
       <Layout>
         <Header></Header>
 
         <Background>
-          <Img src="https://news.samsungdisplay.com/wp-content/uploads/2018/08/14.jpg"></Img>
+          <Img src={imgFile || 'https://ifh.cc/g/LLB0LN.png'} alt="profile"></Img>
         </Background>
         <NickName>{nickName}</NickName>
 

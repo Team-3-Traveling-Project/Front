@@ -9,15 +9,21 @@ import MapContainer from '../utils/Map';
 import { useNavigate } from 'react-router';
 import { baseInstance } from '../apis/config';
 import DatePick from '../components/DatePick';
+import { useLocation } from 'react-router-dom';
 const categories = ['관광명소', '음식점', '카페'];
 const categoriesCode = ['AT4', 'FD6', 'CE7'];
 
 export default function Plan() {
+  const location = useLocation();
+  const plan_id = location.state?.plan_id;
+  console.log('제발 되라', plan_id);
+
   const navigate = useNavigate();
   // -------- button, toggle ----------
   const [activeTab, setActiveTab] = useState<any>(0); // 선택한 카테고리 인덱스
   const [isOpened, setIsOpened] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
+  const [mapLocation, setMapLocation] = useState<[number, number] | null>(null);
 
   const toggleHandler = () => {
     setIsOpened(!isOpened);
@@ -53,7 +59,9 @@ export default function Plan() {
       });
       SetPlaceData(response.data);
       // console.log('처음 렌더링 될 때',response);
-      console.log('여기 좌표있나봐봐', response);
+      console.log('여기 좌표있나봐봐', response.data[0]);
+      setMapLocation([parseFloat(response.data[0].x), parseFloat(response.data[0].y)]);
+      console.log('좌표 잘가고 있는거 마즘?', mapLocation);
     } catch (error) {
       console.log(error);
     }
@@ -421,7 +429,7 @@ export default function Plan() {
         </PlanBar>
 
         <MapArea className={isOpened ? 'isOpened' : ''}>
-          <MapContainer places={bookMark} plans={addedPlan} />
+          <MapContainer places={bookMark} plans={addedPlan} mapLocation={mapLocation} />
         </MapArea>
       </Layout>
     </>
