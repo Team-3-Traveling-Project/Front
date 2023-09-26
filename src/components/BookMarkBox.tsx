@@ -13,7 +13,9 @@ export default function BookMarkBox({ imgUrl, name, category, location, onClick,
 
   return (
     <Box onClick={onClick}>
-      <img src={imgUrl} alt="img" style={{ width: '56px', height: '56px', borderRadius: '5px' }} />
+      <div style={{width:'56px'}}>
+        <img src={imgUrl} alt="img" style={{ width: '56px', height: '56px', borderRadius: '5px' }} />
+      </div>
       <TextBox>
         <TitleLayout>
           <Title>{name}</Title>
@@ -25,7 +27,7 @@ export default function BookMarkBox({ imgUrl, name, category, location, onClick,
         </TitleLayout>
         <Loca>
           <span style={{ color: '#63BEC6', marginRight: '4px' }}>{category}</span>
-          {location}
+          <Location>{location}</Location> 
         </Loca>
       </TextBox>
     </Box>
@@ -38,6 +40,8 @@ const Box = styled.button`
   border-radius: 6px;
   padding: 18px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   transition: box-shadow 0.3s ease-in-out;
   &:hover {
@@ -47,7 +51,7 @@ const Box = styled.button`
 
 const TextBox = styled.div`
   width: 330px;
-  height: 54px;
+  height: 100%;
   margin-left: 12px;
 `;
 
@@ -56,12 +60,25 @@ const TitleLayout = styled.div`
   gap: 5px;
 `;
 const Title = styled.div`
+  width: 220px;
   font-size: 20px;
   font-weight: 600;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
 `;
 const Loca = styled.div`
   font-size: 14px;
 `;
+
+const Location = styled.div`
+  width: 255px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+`
 
 const DeleteLayout = styled.div`
   display: flex;

@@ -13,8 +13,9 @@ function BookMark() {
     road_address_namen: string;
     place_name: string;
     id: number;
-    imgUrl: string;
+    image_url: string;
     location: string;
+    group_name: string;
   };
   // 북마크 목록 관리
   const [bookmarkData, setBookmarkData] = useState<BookMarkDataProps[]>([]);
@@ -110,9 +111,9 @@ function BookMark() {
             return (
               <BookMarkBox
                 key={item.id}
-                imgUrl={item.imgUrl}
+                imgUrl={item.image_url}
                 name={item.place_name}
-                category="명소"
+                category={item.group_name}
                 location={item.address_name}
                 onClick={() => {}}
                 onDelete={() => deleteBookMark(item.id)}

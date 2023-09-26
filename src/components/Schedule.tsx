@@ -116,6 +116,7 @@ const Loca = styled.div`
 `;
 
 const Location = styled.div`
+  width: 250px;
   display: block;
   white-space: nowrap;
   overflow: hidden;
