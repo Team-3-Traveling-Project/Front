@@ -19,7 +19,6 @@ export default function PlanList() {
       });
       setNickName(response.data.nickname);
       setImgFile(response.data.profile_img_url);
-      
     } catch (error) {
       console.log(error);
       alert('로그인 후 이용해주세요');
@@ -32,7 +31,7 @@ export default function PlanList() {
       const response = await baseInstance.get('/mytravel', {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
-      console.log('이미지 넘어가는 지 ㅇ확인',response)
+      console.log('이미지 넘어가는 지 ㅇ확인', response);
       console.log(response.data);
       setPlans(response.data);
     } catch (error) {
@@ -40,8 +39,9 @@ export default function PlanList() {
     }
   };
 
-  const goDetails = async (planId: number) => {
+  const goDetails = async (planId: number, city: string) => {
     navigate(`/plancheck/${planId}`);
+    localStorage.setItem('chosed place', city);
   };
 
   const deletePlan = async (plan_id: number) => {
@@ -80,7 +80,7 @@ export default function PlanList() {
               date={item.date}
               city={item.city}
               img={item.cityimgUrl}
-              details={() => goDetails(item.id)}
+              details={() => goDetails(item.id, item.city)}
               onDelete={() => deletePlan(item.id)}
             />
           ))}
