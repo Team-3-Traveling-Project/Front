@@ -19,12 +19,14 @@ function PlanCheck() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       console.log('response', response.data[0]);
+      console.log('placeList', response.data[0].placeList);
       setDate(response.data[0].date);
       setCity(response.data[0].city);
       setPlaces(response.data[0].placeList);
 
       // console.log('places', typeof places);
-      console.log('places', places[0].img_url);
+      console.log('places img', places[0].img_url);
+      console.log('places group name', places[0].group_name);
     } catch (error) {
       console.log('error', error);
     }
@@ -35,7 +37,7 @@ function PlanCheck() {
   }, []);
 
   useEffect(() => {
-    console.log('plancheck', places);
+    // console.log('plancheck', places);
   }, [places]);
 
   return (
@@ -75,10 +77,10 @@ function PlanCheck() {
             return (
               <ScheduleBox
                 key={item.id}
-                imgUrl={item.img_url}
+                imgUrl={item.img_url} //
                 num={index + 1}
                 name={item.place_name}
-                category="명소"
+                category={item.group_name} //
                 location={item.road_address_name}
                 onClick={() => {}}
                 x={item.x}

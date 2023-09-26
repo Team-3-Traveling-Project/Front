@@ -102,6 +102,7 @@ const TitleLayout = styled.div`
   gap: 5px;
 `;
 const Title = styled.div`
+  width: 200px;
   font-size: 20px;
   font-weight: 600;
   display: block;

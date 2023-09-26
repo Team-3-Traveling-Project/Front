@@ -52,7 +52,7 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       SetPlaceData(response.data);
-      // console.log('처음 렌더링 될 때',response);
+      console.log('처음 렌더링 될 때',response);
       console.log('여기 좌표있나봐봐', response);
     } catch (error) {
       console.log(error);
@@ -176,7 +176,7 @@ export default function Plan() {
     x: string;
     y: string;
     group_name: string;
-    img_url: string;
+    image_url: string;
     city: string;
     userId: string;
   };
@@ -189,7 +189,7 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       setBookMark(response.data.bookmarkList);
-      // console.log(response.data.bookmarkList);
+      console.log('bookMark',response.data.bookmarkList);
     } catch (error) {
       console.log(error);
     }
@@ -395,7 +395,7 @@ export default function Plan() {
                   name={item.place_name}
                   category={item.group_name}
                   location={item.address_name}
-                  imgUrl={item.img_url}
+                  imgUrl={item.image_url}
                   remove={() => deleteBookMark(item.id)}
                   num={index + 1}
                   clicked={clicked}
