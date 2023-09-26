@@ -23,6 +23,7 @@ function PlanCheck() {
       setDate(response.data[0].date);
       setCity(response.data[0].city);
       setPlaces(response.data[0].placeList);
+      console.log('이거확인해봐봐봐ㅣ이ㅏㅓㄹ니ㅏㅓㄹ', response);
 
       // console.log('places', typeof places);
       console.log('places img', places[0].img_url);
@@ -91,7 +92,7 @@ function PlanCheck() {
         </Plan>
       </PlanCheckBar>
 
-      <MapArea >
+      <MapArea>
         <MapContainer places={places} showLine={true} />
       </MapArea>
     </Layout>
@@ -153,4 +154,4 @@ const MapArea = styled.div`
   flex: 1;
   height: 100vh;
   background-color: #b7d6ff;
-`
+`;

@@ -9,11 +9,21 @@ type PlaceBtnProps = {
   onClick?: () => void;
   remove: () => void;
   num: number;
-  clicked:any;
+  clicked: any;
   setClicked: any;
 };
 
-export default function NumberScheduleBox({ imgUrl, name, category, location, onClick, remove, num, clicked, setClicked }: PlaceBtnProps) {
+export default function NumberScheduleBox({
+  imgUrl,
+  name,
+  category,
+  location,
+  onClick,
+  remove,
+  num,
+  clicked,
+  setClicked,
+}: PlaceBtnProps) {
   // const [num,setNum] = useState(1);
 
   const fallbackImageUrl = 'https://ifh.cc/v-On2Oyz)%EC%9D%B4';
@@ -25,14 +35,15 @@ export default function NumberScheduleBox({ imgUrl, name, category, location, on
       ))} */}
       <Number>{num}</Number>
       <Box onClick={onClick}>
-        <div style={{width:'48px'}}>
-          <Img 
-            src={imgUrl} 
+        <div style={{ width: '48px' }}>
+          <Img
+            src={imgUrl}
             // onError={(e) => {
             //   const imgElement = e.target as HTMLImageElement;
             //   imgElement.src = fallbackImageUrl;
             // }}
-            alt="img" />
+            alt="img"
+          />
         </div>
         <TextBox>
           <TitleLayout>
@@ -83,10 +94,10 @@ const Box = styled.button`
 `;
 
 const Img = styled.img`
-  width: 48px; 
-  height: 48px; 
+  width: 48px;
+  height: 48px;
   border-radius: 5px;
-`
+`;
 
 const TextBox = styled.div`
   width: 300px;
@@ -114,15 +125,14 @@ const Location = styled.div`
   display: block;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow:ellipsis;
-`
+  text-overflow: ellipsis;
+`;
 
 const AddLayout = styled.div`
   display: flex;
   gap: 5px;
   margin-left: auto;
   align-items: center;
-  
 `;
 
 const Delete = styled.button`
