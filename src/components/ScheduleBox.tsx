@@ -19,7 +19,7 @@ export default function ScheduleBox({ imgUrl, num, name, category, location, onC
         <PictureLayout>
         <Num>{num}</Num>
         <TextBox>
-          <span style={{ color: '#63BEC6', marginRight: '4px' }}>명소</span>
+          <span style={{ color: '#63BEC6', marginRight: '4px' }}>{category}</span>
           <Title>{name}</Title>
         </TextBox>
         </PictureLayout>
@@ -30,7 +30,7 @@ export default function ScheduleBox({ imgUrl, num, name, category, location, onC
             borderRadius: '6px',
             marginLeft:'10px'
           }}
-          src="https://cdn.myro.co.kr/prod/image/city/Tokyo.jpg"
+          src= {imgUrl}
           alt="Travel"
         />
       </Box>
@@ -77,6 +77,11 @@ const TextBox = styled.div`
 `;
 
 const Title = styled.div`
+  width: 220px;
   font-size: 20px;
   font-weight: 600;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
 `;
