@@ -7,15 +7,14 @@ type PlaceBtnProps = {
   onClick?: () => void;
   remove: () => void;
   num: number;
+  deleteBookMark?: any;
 };
 
-export default function NumberScheduleBox({ place, onClick, remove, num }: PlaceBtnProps) {
-  // const [num,setNum] = useState(1);
-
+export default function NumberScheduleBox({ place, onClick, remove, num, deleteBookMark }: PlaceBtnProps) {
   const fallbackImageUrl = 'https://ifh.cc/v-On2Oyz)%EC%9D%B4';
 
   useEffect(() => {
-    // console.log('numberbox에 props 확인하세요', place);
+    console.log('numberbox에 props 확인하세요', place);
   }, []);
 
   return (
@@ -39,7 +38,7 @@ export default function NumberScheduleBox({ place, onClick, remove, num }: Place
           <TitleLayout>
             <Title>{place.place_name}</Title>
             <AddLayout>
-              <Delete onClick={remove}>
+              <Delete onClick={deleteBookMark}>
                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                   close
                 </span>

@@ -28,17 +28,12 @@ export default function Plan() {
   const [mapLocation, setMapLocation] = useState<[number, number] | null>(null);
   const [area, setArea] = useState<[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<string>('');
-  const [placeDataTourism, setPlaceDataTourism] = useState<PlaceDataProps[]>([]);
-  const [placeDataRestaurant, setPlaceDataRestaurant] = useState<PlaceDataProps[]>([]);
-  const [placeDataCafe, setPlaceDataCafe] = useState<PlaceDataProps[]>([]);
-  // const [dailyPlan, setDailyPlan] = useState<PlaceDataProps[]>([]);
-  const [plusMinus, setPlusMinus] = useState<boolean>(false);
-  const [bookMark, setBookMark] = useState<BookMarkProps[]>([]);
+  // const [bookMark, setBookMark] = useState<BookMarkProps[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   //---zustand----
 
-  const { dailyPlan, setDailyPlan, defaultList, setDefaultList } = dailyPlanStore();
+  const { dailyPlan, setDailyPlan, defaultList, setDefaultList, bookMark, setBookMark } = dailyPlanStore();
 
   //----------------무한 스크롤링--------------------
 
@@ -70,7 +65,7 @@ export default function Plan() {
       // SetPlaceData(response.data);
       // console.log('처음 렌더링 될 때', response.data);
       setMapLocation([parseFloat(response.data[0].x), parseFloat(response.data[0].y)]);
-      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false }));
+      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false, liked: false }));
       setDefaultList(data);
       // console.log('defaultList', defaultList);
     } catch (error) {
@@ -137,8 +132,9 @@ export default function Plan() {
           headers: { Authorization: `${localStorage.getItem('Authorization')}` },
         },
       );
-      SetPlaceData(response.data);
-      // console.log(response);
+      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false, liked: false }));
+      setDefaultList(data);
+      console.log('setDefaultList', defaultList);
     } catch (error) {
       console.log(error);
     }
@@ -155,22 +151,16 @@ export default function Plan() {
           headers: { Authorization: `${localStorage.getItem('Authorization')}` },
         },
       );
+      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false, liked: false }));
       // 카테고리에 따라서 데이터를 분기하여 저장
       if (groupCode === 'AT4') {
-        setPlaceDataTourism(response.data);
-        SetPlaceData(response.data);
+        setDefaultList(data);
       } else if (groupCode === 'FD6') {
-        setPlaceDataRestaurant(response.data);
-        SetPlaceData(response.data);
+        setDefaultList(data);
       } else if (groupCode === 'CE7') {
-        setPlaceDataCafe(response.data);
-        SetPlaceData(response.data);
+        setDefaultList(data);
       }
-      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false }));
-      setDefaultList(data);
-      console.log('베이커리',data);
-      // console.log('activeTab',activeTab);
-      // console.log('selectedRegion',selectedRegion);
+      // console.log('베이커리1', data);
     } catch (error) {
       console.log(error);
     }
@@ -198,7 +188,6 @@ export default function Plan() {
   }, [plan_id]);
 
   // ----------- 일정 추가 및 삭제 -------------
-
   // (+) button 눌렀을 때 일정에 추가
   const addDailyPlan = (place: PlaceDataProps) => {
     // 이미 추가되어 있는지 확인
@@ -262,7 +251,6 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       setBookMark(response.data.bookmarkList);
-      console.log('bookMark확인해야 합니다', response.data.bookmarkList);
     } catch (error) {
       console.log(error);
     }
@@ -271,7 +259,7 @@ export default function Plan() {
   // ♥️ 누를 때 마다 북마크 post 요청 (서버에 저장)
   const postBookMark = async (place: PlaceDataProps) => {
     const newPlace = { ...place, city: query };
-    console.log('newPlace', newPlace);
+    // console.log('newPlace', newPlace);
     try {
       const response = await baseInstance.post('bookmark', newPlace, {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
@@ -285,9 +273,9 @@ export default function Plan() {
     }
   };
   // 북마크 delete
-  const deleteBookMark = async (id: number) => {
+  const deleteBookMark = async (removeBookmark: any) => {
     try {
-      const data = await baseInstance.delete(`bookmark/${id}`, {
+      const data = await baseInstance.delete(`bookmark/${removeBookmark.id}`, {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       console.log(data);
@@ -400,7 +388,7 @@ export default function Plan() {
                 }}
                 removePlan={() => removePlan(item)}
                 addBookMark={() => postBookMark(item)}
-                // removeBookMark={() => deleteBookMark(item)}
+                removeBookMark={() => deleteBookMark(item)}
               />
             ))}
           </List>
@@ -423,8 +411,14 @@ export default function Plan() {
           <BookMark>
             <p>북마크</p>
             <BookMarkList>
-              {bookMark.map((item, index) => (
-                <NumberScheduleBox key={index} place={item} remove={() => removePlan(item)} num={index + 1} />
+              {bookMark.map((item: any, index: number) => (
+                <NumberScheduleBox
+                  key={index}
+                  place={item}
+                  deleteBookMark={() => deleteBookMark(item)}
+                  remove={() => removePlan(item)}
+                  num={index + 1}
+                />
               ))}
             </BookMarkList>
           </BookMark>

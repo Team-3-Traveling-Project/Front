@@ -5,8 +5,8 @@ import { dailyPlanStore } from '../stores/dailyPlanStore';
 type PlaceBtnProps = {
   addDailyPlan: () => void;
   removePlan?: () => void;
-  addBookMark: () => void;
-  // removeBookMark: () => void;
+  addBookMark?: () => void;
+  removeBookMark: () => void;
   // setCheckSelected: Dispatch<SetStateAction<number>>;
   place?: any;
 };
@@ -30,7 +30,7 @@ export default function Schedule({ addDailyPlan, removePlan, addBookMark, place 
   // }, [dailyPlan]);
 
   useEffect(() => {
-    // console.log('props로 넘긴 place', place);
+    console.log('props로 넘긴 place', place);
   }, [place]);
 
   return (
@@ -43,11 +43,11 @@ export default function Schedule({ addDailyPlan, removePlan, addBookMark, place 
         <TitleLayout>
           <Title>{place.place_name}</Title>
           <AddLayout>
-            {/* <Add onClick={() => {}} className={isPlusMinus ? 'isPlusMinus' : ''}>
+            <Add onClick={addBookMark} className={place.liked ? 'red' : ''}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px', lineHeight: '22px' }}>
                 favorite
               </span>
-            </Add> */}
+            </Add>
             <Add onClick={addDailyPlan} className={place.checked ? 'mint' : ''}>
               +
             </Add>
@@ -128,7 +128,7 @@ const Add = styled.button<{ mintBtn?: boolean }>`
   color: white;
   cursor: pointer;
 
-  &.isPlusMinus {
+  &.red {
     background-color: #d52e2e;
   }
   &.mint {
