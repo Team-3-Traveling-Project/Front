@@ -1,32 +1,22 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 // import React, { useState } from 'react';
 
 type PlaceBtnProps = {
-  imgUrl?: string;
-  name?: any;
-  category?: string;
-  location?: string;
+  place: any;
   onClick?: () => void;
   remove: () => void;
   num: number;
-  clicked: any;
-  setClicked: any;
 };
 
-export default function NumberScheduleBox({
-  imgUrl,
-  name,
-  category,
-  location,
-  onClick,
-  remove,
-  num,
-  clicked,
-  setClicked,
-}: PlaceBtnProps) {
+export default function NumberScheduleBox({ place, onClick, remove, num }: PlaceBtnProps) {
   // const [num,setNum] = useState(1);
 
   const fallbackImageUrl = 'https://ifh.cc/v-On2Oyz)%EC%9D%B4';
+
+  useEffect(() => {
+    // console.log('numberbox에 props 확인하세요', place);
+  }, []);
 
   return (
     <Layout>
@@ -37,7 +27,7 @@ export default function NumberScheduleBox({
       <Box onClick={onClick}>
         <div style={{ width: '48px' }}>
           <Img
-            src={imgUrl}
+            src={place.img_url}
             // onError={(e) => {
             //   const imgElement = e.target as HTMLImageElement;
             //   imgElement.src = fallbackImageUrl;
@@ -47,7 +37,7 @@ export default function NumberScheduleBox({
         </div>
         <TextBox>
           <TitleLayout>
-            <Title>{name}</Title>
+            <Title>{place.place_name}</Title>
             <AddLayout>
               <Delete onClick={remove}>
                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
@@ -57,8 +47,8 @@ export default function NumberScheduleBox({
             </AddLayout>
           </TitleLayout>
           <Loca>
-            <span style={{ color: '#63BEC6', marginRight: '4px' }}>{category}</span>
-            <Location>{location}</Location>
+            <span style={{ color: '#63BEC6', marginRight: '4px' }}>{place.group_name}</span>
+            <Location>{place.address_name}</Location>
           </Loca>
         </TextBox>
       </Box>

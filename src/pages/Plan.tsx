@@ -12,6 +12,7 @@ import DatePick from '../components/DatePick';
 import { useLocation } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import uuid from 'react-uuid';
+import { dailyPlanStore } from '../stores/dailyPlanStore';
 
 const categories = ['관광명소', '음식점', '카페'];
 const categoriesCode = ['AT4', 'FD6', 'CE7'];
@@ -30,13 +31,17 @@ export default function Plan() {
   const [placeDataTourism, setPlaceDataTourism] = useState<PlaceDataProps[]>([]);
   const [placeDataRestaurant, setPlaceDataRestaurant] = useState<PlaceDataProps[]>([]);
   const [placeDataCafe, setPlaceDataCafe] = useState<PlaceDataProps[]>([]);
-  const [dailyPlan, setDailyPlan] = useState<PlaceDataProps[]>([]);
+  // const [dailyPlan, setDailyPlan] = useState<PlaceDataProps[]>([]);
   const [plusMinus, setPlusMinus] = useState<boolean>(false);
   const [bookMark, setBookMark] = useState<BookMarkProps[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  // const [addedBookMark, setAddedBookMark] = useState<BookMarkProps[]>([]);
+
+  //---zustand----
+
+  const { dailyPlan, setDailyPlan, defaultList, setDefaultList } = dailyPlanStore();
 
   //----------------무한 스크롤링--------------------
+
   const [ref, inView] = useInView();
 
   // ---------- 렌더링 될 때마다 바뀌는 장소 데이터 목록 -----------
@@ -49,8 +54,6 @@ export default function Plan() {
     group_name: string;
     img_url: string;
     place_id?: any;
-    place?: any;
-    isAdded?: any;
   };
 
   // local storage에서 chosed place 가져오기
@@ -65,10 +68,11 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       // SetPlaceData(response.data);
-      // console.log('처음 렌더링 될 때', response);
+      // console.log('처음 렌더링 될 때', response.data);
       setMapLocation([parseFloat(response.data[0].x), parseFloat(response.data[0].y)]);
-      SetPlaceData(response.data.map((item: any) => ({ ...item, place_id: uuid() })));
-      // console.log('Dailyplan아이디 잘 있니', placeData);
+      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false }));
+      setDefaultList(data);
+      // console.log('defaultList', defaultList);
     } catch (error) {
       console.log(error);
     }
@@ -162,8 +166,9 @@ export default function Plan() {
         setPlaceDataCafe(response.data);
         SetPlaceData(response.data);
       }
-      // SetPlaceData(response.data);
-      console.log(response);
+      const data = response.data.map((item: any) => ({ ...item, place_id: uuid(), checked: false }));
+      setDefaultList(data);
+      console.log('베이커리',data);
       // console.log('activeTab',activeTab);
       // console.log('selectedRegion',selectedRegion);
     } catch (error) {
@@ -197,27 +202,41 @@ export default function Plan() {
   // (+) button 눌렀을 때 일정에 추가
   const addDailyPlan = (place: PlaceDataProps) => {
     // 이미 추가되어 있는지 확인
-    const isAlreadyAdded = dailyPlan.some((plan) => plan.place_id === place.place_id);
-
-    console.log('place', place);
+    const isAlreadyAdded = dailyPlan.some((plan: any) => plan.place_id === place.place_id);
+    setDefaultList(
+      defaultList.map((item: any) => {
+        if (item.place_id === place.place_id) {
+          return { ...item, checked: true };
+        }
+        return item;
+      }),
+    );
 
     if (!isAlreadyAdded) {
       // 추가되어 있지 않은 경우에만 추가
-      setDailyPlan([...dailyPlan, place]);
-      console.log('Daily Plan', dailyPlan);
-
-      setPlusMinus(true);
-      console.log('plusMinus', plusMinus);
+      setDailyPlan([...dailyPlan, { ...place, checked: true }]);
     } else {
       // 이미 추가된 경우에는 제거
-      removePlan(place.place_name);
-      setPlusMinus(false);
+      removePlan(place);
     }
   };
+  useEffect(() => {
+    console.log('Daily Plan 상태 변경 감지:', dailyPlan);
+  }, [dailyPlan]);
 
   // 일정 삭제
-  const removePlan = (placeName: string) => {
-    const newPlan = dailyPlan.filter((plan) => plan.place_name !== placeName);
+  const removePlan = (removePlace: any) => {
+    setDefaultList(
+      defaultList.map((item: any) => {
+        if (item.place_id === removePlace.place_id) {
+          return { ...item, checked: false };
+        }
+        return item;
+      }),
+    );
+
+    dailyPlan.map((place: any) => (place.place_id === removePlace.plan_id ? { ...place, checked: false } : place));
+    const newPlan = dailyPlan.filter((plan: any) => plan.place_id !== removePlace.place_id);
     setDailyPlan(newPlan);
     // console.log('placeData', placeData);
   };
@@ -243,33 +262,11 @@ export default function Plan() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       setBookMark(response.data.bookmarkList);
-      console.log('bookMark', response.data.bookmarkList);
+      console.log('bookMark확인해야 합니다', response.data.bookmarkList);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // ♥️ 눌렀을 때 리스트에 추가 (브라우저)
-
-  // const addBookMark = (place: BookMarkProps) => {
-  //   const isAlreadyAdded = dailyPlan.some((plan) => plan.place_name === place.place_name);
-
-  //   if (!isAlreadyAdded) {
-  //     setBookMark([...bookMark, place]);
-  //     postBookMark(place);
-  //     console.log("북마크 추가됨");
-  //   } else {
-  //     removeBookMark(place);
-
-  //     console.log("북마크 제거됨");
-  //   }
-  // };
-  // // 북마크 삭제
-  // const removeBookMark = (place: PlaceDataProps) => {
-  //   const newBookMark =  bookMark.filter((plan)=> plan.place_name !== place.place_name);
-  //   setBookMark(newBookMark);
-
-  // };
 
   // ♥️ 누를 때 마다 북마크 post 요청 (서버에 저장)
   const postBookMark = async (place: PlaceDataProps) => {
@@ -394,30 +391,18 @@ export default function Plan() {
           </Category>
 
           <List>
-            {placeData.map((item, index) => (
+            {defaultList.map((item: any, index: number) => (
               <Schedule
                 key={index}
-                name={item.place_name}
-                category={item.group_name}
-                location={item.address_name}
-                imgUrl={item.img_url}
-                place_id={item.place_id}
-                isChecked={item.isAdded}
+                place={item}
                 addDailyPlan={() => {
                   addDailyPlan(item);
                 }}
-                dailyPlan={dailyPlan}
-                setDailyPlan={setDailyPlan}
-                removePlan={() => removePlan(item.place_name)}
-                plusMinus={plusMinus}
-                setPlusMinus={setPlusMinus}
+                removePlan={() => removePlan(item)}
                 addBookMark={() => postBookMark(item)}
                 // removeBookMark={() => deleteBookMark(item)}
               />
             ))}
-            <div ref={ref} style={{ color: 'transparent' }}>
-              끝
-            </div>
           </List>
         </AreaBar>
 
@@ -430,18 +415,8 @@ export default function Plan() {
           <ScheduleArea>
             <p>일정</p>
             <PlanList>
-              {dailyPlan.map((item, index) => (
-                <NumberScheduleBox
-                  key={item.place_name}
-                  name={item.place_name}
-                  category={item.group_name}
-                  location={item.address_name}
-                  imgUrl={item.img_url}
-                  remove={() => removePlan(item.place_name)}
-                  num={index + 1}
-                  clicked={plusMinus}
-                  setClicked={setPlusMinus}
-                />
+              {dailyPlan.map((item: any, index: number) => (
+                <NumberScheduleBox key={index} place={item} remove={() => removePlan(item)} num={index + 1} />
               ))}
             </PlanList>
           </ScheduleArea>
@@ -449,32 +424,8 @@ export default function Plan() {
             <p>북마크</p>
             <BookMarkList>
               {bookMark.map((item, index) => (
-                <NumberScheduleBox
-                  key={item.id}
-                  name={item.place_name}
-                  category={item.group_name}
-                  location={item.address_name}
-                  imgUrl={item.image_url}
-                  remove={() => deleteBookMark(item.id)}
-                  num={index + 1}
-                  clicked={plusMinus}
-                  setClicked={setPlusMinus}
-                />
+                <NumberScheduleBox key={index} place={item} remove={() => removePlan(item)} num={index + 1} />
               ))}
-              {/* {addedBookMark.map((item, index) => (
-                    <NumberScheduleBox
-                      key={item.place_name}
-                      name={item.place_name}
-                      category="명소"
-                      location={item.address_name}
-                      imgUrl={item.img_url}
-                      remove={() => removeBookMark(item)}
-                      num={index+1}
-
-                      plusMinus={plusMinus}
-                      setPlusMinus={setPlusMinus}
-                    />
-                  ))} */}
             </BookMarkList>
           </BookMark>
         </PlanBar>

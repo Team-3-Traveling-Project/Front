@@ -1,98 +1,61 @@
 import styled from 'styled-components';
 import React, { useState, ChangeEvent, useEffect } from 'react';
+import { dailyPlanStore } from '../stores/dailyPlanStore';
 
 type PlaceBtnProps = {
-  imgUrl?: string;
-  name?: string;
-  category?: string;
-  location?: string;
-  onClick?: () => void;
   addDailyPlan: () => void;
   removePlan?: () => void;
   addBookMark: () => void;
   // removeBookMark: () => void;
   // setCheckSelected: Dispatch<SetStateAction<number>>;
-  checkToSelected?: boolean;
-  plusMinus: any;
-  setPlusMinus: any;
-  place_id: any;
-  dailyPlan: any;
-  setDailyPlan: any;
-  isChecked: boolean;
+  place?: any;
 };
 
-export default function Schedule({
-  imgUrl,
-  name,
-  category,
-  location,
-  onClick,
-  addDailyPlan,
-  removePlan,
-  addBookMark,
-  checkToSelected,
-  plusMinus,
-  setPlusMinus,
-  place_id,
-  dailyPlan,
-  setDailyPlan,
-  isChecked,
-}: PlaceBtnProps) {
-  const [isPlusMinus, setIsPlusMinus] = useState<boolean>(false); // 북마크 색
-  const [clickedId, setClickedId] = useState<string>();
+export default function Schedule({ addDailyPlan, removePlan, addBookMark, place }: PlaceBtnProps) {
+  const { dailyPlan, setDailyPlan, defaultList, setDefaultList } = dailyPlanStore();
 
   const plusOnClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.name);
-    setClickedId(e.currentTarget.name);
     addDailyPlan();
     console.log('dailyPlan', dailyPlan);
   };
 
+  // useEffect(() => {
+  //   const updatedDailyPlan = dailyPlan.map((plan: any) => {
+  //     if (plan.place_id === clickedId && dailyPlan.length > 0) {
+  //       plan.isAdded = true;
+  //     }
+  //     return plan;
+  //   });
+  // }, [dailyPlan]);
+
   useEffect(() => {
-    const updatedDailyPlan = dailyPlan.map((plan: any) => {
-      if (plan.place_id === clickedId && dailyPlan.length > 0) {
-        plan.isAdded = true;
-      }
-      return plan;
-    });
-  }, [dailyPlan]);
+    // console.log('props로 넘긴 place', place);
+  }, [place]);
 
   return (
-    <Box onClick={onClick}>
+    <Box>
       <div style={{ width: '56px' }}>
-        <img
-          src={imgUrl}
-          alt="img"
-          // onError={(e) => {
-          //   e.target.src = "https://ifh.cc/g/On2Oyz.png";
-          // }}
-          style={{ width: '56px', height: '56px', borderRadius: '5px' }}
-        />
+        <img src={place.img_url} alt="img" style={{ width: '56px', height: '56px', borderRadius: '5px' }} />
       </div>
 
       <TextBox>
         <TitleLayout>
-          <Title>{name}</Title>
+          <Title>{place.place_name}</Title>
           <AddLayout>
-            <Add onClick={() => {}} className={isPlusMinus ? 'isPlusMinus' : ''}>
+            {/* <Add onClick={() => {}} className={isPlusMinus ? 'isPlusMinus' : ''}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px', lineHeight: '22px' }}>
                 favorite
               </span>
-            </Add>
-            <Add
-              name={place_id}
-              onClick={(e: any) => {
-                plusOnClick(e);
-              }}
-              className={isChecked ? 'plusMinus' : ''}
-            >
+            </Add> */}
+            <Add onClick={addDailyPlan} className={place.checked ? 'mint' : ''}>
               +
             </Add>
           </AddLayout>
         </TitleLayout>
         <Loca>
-          <span style={{ color: '#63BEC6', marginRight: '4px' }}>{category}</span>
-          <Location>{location}</Location>
+          <span style={{ color: '#63BEC6', marginRight: '4px' }}>{place.group_name}</span>
+          <Location>{place.address_name}</Location>
         </Loca>
       </TextBox>
     </Box>
@@ -168,7 +131,7 @@ const Add = styled.button<{ mintBtn?: boolean }>`
   &.isPlusMinus {
     background-color: #d52e2e;
   }
-  &.plusMinus {
+  &.mint {
     background-color: #63bec6;
   }
 `;
