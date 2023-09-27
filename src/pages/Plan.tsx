@@ -10,28 +10,84 @@ import { useNavigate } from 'react-router';
 import { baseInstance } from '../apis/config';
 import DatePick from '../components/DatePick';
 import { useLocation } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
+import uuid from 'react-uuid';
+
 const categories = ['관광명소', '음식점', '카페'];
 const categoriesCode = ['AT4', 'FD6', 'CE7'];
 
 export default function Plan() {
-  const location = useLocation();
-  const plan_id = location.state?.plan_id;
-  console.log('제발 되라', plan_id);
-
-  //----plan id 있을 때 일정 가져오기----------------
+  const [page, setPage] = useState(1);
+  const [placeData, SetPlaceData] = useState<PlaceDataProps[]>([]);
   const [city, setCity] = useState('');
   const [date, setDate] = useState('');
+  const [activeTab, setActiveTab] = useState<any>(0); // 선택한 카테고리 인덱스
+  const [isOpened, setIsOpened] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>('');
+  const [mapLocation, setMapLocation] = useState<[number, number] | null>(null);
+  const [area, setArea] = useState<[]>([]);
+  const [selectedRegion, setSelectedRegion] = useState<string>('');
+  const [placeDataTourism, setPlaceDataTourism] = useState<PlaceDataProps[]>([]);
+  const [placeDataRestaurant, setPlaceDataRestaurant] = useState<PlaceDataProps[]>([]);
+  const [placeDataCafe, setPlaceDataCafe] = useState<PlaceDataProps[]>([]);
+  const [dailyPlan, setDailyPlan] = useState<PlaceDataProps[]>([]);
+  const [plusMinus, setPlusMinus] = useState<boolean>(false);
+  const [bookMark, setBookMark] = useState<BookMarkProps[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  // const [addedBookMark, setAddedBookMark] = useState<BookMarkProps[]>([]);
+
+  //----------------무한 스크롤링--------------------
+  const [ref, inView] = useInView();
+
+  // ---------- 렌더링 될 때마다 바뀌는 장소 데이터 목록 -----------
+  type PlaceDataProps = {
+    place_name: string;
+    address_name: string;
+    road_address_name: string;
+    x: string;
+    y: string;
+    group_name: string;
+    img_url: string;
+    place_id?: any;
+    place?: any;
+    isAdded?: any;
+  };
+
+  // local storage에서 chosed place 가져오기
+  const query = localStorage.getItem('chosed place');
+
+  // get으로 받아온 장소 데이터 관리
+
+  // ------- 처음 렌더링 될 때 관광명소(dafault) 데이터 가져오기 --------
+  const GetDefaultPlace = async () => {
+    try {
+      const response = await baseInstance.get(`findplace/${query}`, {
+        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
+      });
+      // SetPlaceData(response.data);
+      // console.log('처음 렌더링 될 때', response);
+      setMapLocation([parseFloat(response.data[0].x), parseFloat(response.data[0].y)]);
+      SetPlaceData(response.data.map((item: any) => ({ ...item, place_id: uuid() })));
+      // console.log('Dailyplan아이디 잘 있니', placeData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //-----------------------
+
+  const location = useLocation();
+  const plan_id = location.state?.plan_id;
+
+  //----plan id 있을 때 일정 가져오기----------------
 
   const getPlans = async () => {
     try {
       const response = await baseInstance.get(`/mytravel/${plan_id}`, {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
-      console.log('id있을 때 값 가져온거얌 히히히ㅣ히히힣', response.data[0]);
-      console.log('placeList', response.data[0].placeList);
       setDate(response.data[0].date);
       setCity(response.data[0].city);
-      setAddedPlan(response.data[0].placeList);
 
       // console.log('places', typeof places);
       // console.log('places img', places[0].img_url);
@@ -45,10 +101,6 @@ export default function Plan() {
 
   const navigate = useNavigate();
   // -------- button, toggle ----------
-  const [activeTab, setActiveTab] = useState<any>(0); // 선택한 카테고리 인덱스
-  const [isOpened, setIsOpened] = useState<boolean>(true);
-  const [search, setSearch] = useState<string>('');
-  const [mapLocation, setMapLocation] = useState<[number, number] | null>(null);
 
   const toggleHandler = () => {
     setIsOpened(!isOpened);
@@ -59,41 +111,7 @@ export default function Plan() {
     setSearch(e.target.value);
   };
 
-  // ---------- 렌더링 될 때마다 바뀌는 장소 데이터 목록 -----------
-  type PlaceDataProps = {
-    place_name: string;
-    address_name: string;
-    road_address_name: string;
-    x: string;
-    y: string;
-    group_name: string;
-    img_url: string;
-  };
-
-  // local storage에서 chosed place 가져오기
-  const query = localStorage.getItem('chosed place');
-
-  // get으로 받아온 장소 데이터 관리
-  const [placeData, SetPlaceData] = useState<PlaceDataProps[]>([]);
-
-  // ------- 처음 렌더링 될 때 관광명소(dafault) 데이터 가져오기 --------
-  const GetDefaultPlace = async () => {
-    try {
-      const response = await baseInstance.get(`findplace/${query}`, {
-        headers: { Authorization: `${localStorage.getItem('Authorization')}` },
-      });
-      SetPlaceData(response.data);
-      // console.log('처음 렌더링 될 때',response);
-      console.log('여기 좌표있나봐봐', response.data[0]);
-      setMapLocation([parseFloat(response.data[0].x), parseFloat(response.data[0].y)]);
-      console.log('좌표 잘가고 있는거 마즘?', mapLocation);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // -------------- 도시별 구 조회 -----------------
-  const [area, setArea] = useState<[]>([]);
   const GetRegion = async () => {
     try {
       const response = await baseInstance.get(`findregion/${query}`, {
@@ -107,7 +125,6 @@ export default function Plan() {
 
   // ---------- 검색 -----------
   // 선택한 구의 category place list 가져오기
-  const [selectedRegion, setSelectedRegion] = useState<string>('');
   const GetSearchPlace = async () => {
     try {
       const response = await baseInstance.get(
@@ -125,9 +142,7 @@ export default function Plan() {
 
   // -------- categry별 장소 데이터 가져오기 ----------
   // AT4(관광명소), CE7(카페), FD6(식당)
-  const [placeDataTourism, setPlaceDataTourism] = useState<PlaceDataProps[]>([]);
-  const [placeDataRestaurant, setPlaceDataRestaurant] = useState<PlaceDataProps[]>([]);
-  const [placeDataCafe, setPlaceDataCafe] = useState<PlaceDataProps[]>([]);
+
   const GetRegionPlace = async (groupCode: string) => {
     try {
       const response = await baseInstance.get(
@@ -178,32 +193,32 @@ export default function Plan() {
   }, [plan_id]);
 
   // ----------- 일정 추가 및 삭제 -------------
-  const [addedPlan, setAddedPlan] = useState<PlaceDataProps[]>([]);
-  const [clicked, setClicked] = useState<boolean>(false);
 
   // (+) button 눌렀을 때 일정에 추가
-  const addPlan = (place: PlaceDataProps) => {
+  const addDailyPlan = (place: PlaceDataProps) => {
     // 이미 추가되어 있는지 확인
-    const isAlreadyAdded = addedPlan.some((plan) => plan.place_name === place.place_name);
+    const isAlreadyAdded = dailyPlan.some((plan) => plan.place_id === place.place_id);
+
+    console.log('place', place);
 
     if (!isAlreadyAdded) {
       // 추가되어 있지 않은 경우에만 추가
-      setAddedPlan([...addedPlan, place]);
-      setClicked(true);
-      // console.log("addedPlan",addedPlan)
-      // console.log("clicked", clicked);
-      // console.log("일정 추가됨");
+      setDailyPlan([...dailyPlan, place]);
+      console.log('Daily Plan', dailyPlan);
+
+      setPlusMinus(true);
+      console.log('plusMinus', plusMinus);
     } else {
       // 이미 추가된 경우에는 제거
       removePlan(place.place_name);
-      // console.log('일정 제거됨');
+      setPlusMinus(false);
     }
   };
 
   // 일정 삭제
   const removePlan = (placeName: string) => {
-    const newPlan = addedPlan.filter((plan) => plan.place_name !== placeName);
-    setAddedPlan(newPlan);
+    const newPlan = dailyPlan.filter((plan) => plan.place_name !== placeName);
+    setDailyPlan(newPlan);
     // console.log('placeData', placeData);
   };
 
@@ -221,7 +236,6 @@ export default function Plan() {
     userId: string;
   };
 
-  const [bookMark, setBookMark] = useState<BookMarkProps[]>([]);
   // 처음 렌더링 됐을 때 북마크 get
   const GetBookmark = async () => {
     try {
@@ -236,10 +250,9 @@ export default function Plan() {
   };
 
   // ♥️ 눌렀을 때 리스트에 추가 (브라우저)
-  // const [addedBookMark, setAddedBookMark] = useState<BookMarkProps[]>([]);
 
   // const addBookMark = (place: BookMarkProps) => {
-  //   const isAlreadyAdded = addedPlan.some((plan) => plan.place_name === place.place_name);
+  //   const isAlreadyAdded = dailyPlan.some((plan) => plan.place_name === place.place_name);
 
   //   if (!isAlreadyAdded) {
   //     setBookMark([...bookMark, place]);
@@ -291,7 +304,6 @@ export default function Plan() {
 
   // ------------ 다음 버튼 눌렀을 때 여행일정 저장(post) ------------
   // 선택한 날짜를 관리하는 상태
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const formattedDate = selectedDate ? selectedDate.toISOString().slice(0, 10) : '';
   // console.log(formattedDate);
 
@@ -299,7 +311,7 @@ export default function Plan() {
     const plan = {
       date: formattedDate,
       city: query,
-      placeList: addedPlan,
+      placeList: dailyPlan,
     };
 
     try {
@@ -389,16 +401,23 @@ export default function Plan() {
                 category={item.group_name}
                 location={item.address_name}
                 imgUrl={item.img_url}
-                addPlan={() => {
-                  addPlan(item);
+                place_id={item.place_id}
+                isChecked={item.isAdded}
+                addDailyPlan={() => {
+                  addDailyPlan(item);
                 }}
+                dailyPlan={dailyPlan}
+                setDailyPlan={setDailyPlan}
                 removePlan={() => removePlan(item.place_name)}
-                clicked={clicked}
-                setClicked={setClicked}
+                plusMinus={plusMinus}
+                setPlusMinus={setPlusMinus}
                 addBookMark={() => postBookMark(item)}
                 // removeBookMark={() => deleteBookMark(item)}
               />
             ))}
+            <div ref={ref} style={{ color: 'transparent' }}>
+              끝
+            </div>
           </List>
         </AreaBar>
 
@@ -411,7 +430,7 @@ export default function Plan() {
           <ScheduleArea>
             <p>일정</p>
             <PlanList>
-              {addedPlan.map((item, index) => (
+              {dailyPlan.map((item, index) => (
                 <NumberScheduleBox
                   key={item.place_name}
                   name={item.place_name}
@@ -420,8 +439,8 @@ export default function Plan() {
                   imgUrl={item.img_url}
                   remove={() => removePlan(item.place_name)}
                   num={index + 1}
-                  clicked={clicked}
-                  setClicked={setClicked}
+                  clicked={plusMinus}
+                  setClicked={setPlusMinus}
                 />
               ))}
             </PlanList>
@@ -438,8 +457,8 @@ export default function Plan() {
                   imgUrl={item.image_url}
                   remove={() => deleteBookMark(item.id)}
                   num={index + 1}
-                  clicked={clicked}
-                  setClicked={setClicked}
+                  clicked={plusMinus}
+                  setClicked={setPlusMinus}
                 />
               ))}
               {/* {addedBookMark.map((item, index) => (
@@ -452,8 +471,8 @@ export default function Plan() {
                       remove={() => removeBookMark(item)}
                       num={index+1}
 
-                      clicked={clicked}
-                      setClicked={setClicked}
+                      plusMinus={plusMinus}
+                      setPlusMinus={setPlusMinus}
                     />
                   ))} */}
             </BookMarkList>
@@ -461,7 +480,7 @@ export default function Plan() {
         </PlanBar>
 
         <MapArea className={isOpened ? 'isOpened' : ''}>
-          <MapContainer places={bookMark} plans={addedPlan} mapLocation={mapLocation} />
+          <MapContainer places={bookMark} plans={dailyPlan} mapLocation={mapLocation} />
         </MapArea>
       </Layout>
     </>
@@ -512,6 +531,7 @@ const Area = styled.div`
 const DateSection = styled.div`
   display: flex;
   align-items: center;
+  gap: 30px;
   margin-top: 30px;
   /* border: 1px solid black; */
   width: 316px;

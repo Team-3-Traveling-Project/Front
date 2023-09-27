@@ -17,7 +17,7 @@ const MapContainer = ({ places, showLine = false, plans, mapLocation }: MapProps
   useEffect(() => {
     let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
     // var defaultLocation = new window.kakao.maps.LatLng(parseFloat(places[0]), parseFloat(places[1]));
-    console.log('이게 좌표여', mapLocation);
+    // console.log('이게 좌표여', mapLocation);
 
     const centerLat = mapLocation ? mapLocation[1] : 37.56680618429329;
     const centerLng = mapLocation ? mapLocation[0] : 126.97866075325555;
@@ -44,7 +44,7 @@ const MapContainer = ({ places, showLine = false, plans, mapLocation }: MapProps
 
       var latlng = new window.kakao.maps.LatLng(parseFloat(places[i].y), parseFloat(places[i].x));
 
-      console.log('이게 좌표값입니더', latlng);
+      // console.log('이게 좌표값입니더', latlng);
 
       linePath.push(latlng);
 
@@ -72,7 +72,7 @@ const MapContainer = ({ places, showLine = false, plans, mapLocation }: MapProps
     }
 
     // console.log('linePath', linePath);
-    console.log('places', places);
+    // console.log('places', places);
 
     // 다음은 plans의 마커를 추가하는 부분입니다.
     var planImageSrc = 'https://ifh.cc/g/2qQf8L.png'; // plans에 사용할 마커 이미지 URL을 설정하세요
