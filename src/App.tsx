@@ -11,6 +11,7 @@ import DatePick from './components/DatePick';
 import PlanCheck from './pages/PlanCheck';
 import MyPage from './pages/MyPage';
 import PlanList from './pages/PlanList';
+import Redirection from './pages/Redirection';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/login" element={<Login />} />
+          <Route path='/kakao/callback' element={<Redirection />} />
           <Route path="/singUp" element={<SignUp />} />
           <Route path="/bookMark" element={<BookMark />} />
           <Route path="/plan" element={<Plan />} />
