@@ -540,6 +540,7 @@ const PlanBar = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-left: 5px;
 
   /* &.isOpened {
     transform: translateX(-355px);
