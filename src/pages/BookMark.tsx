@@ -13,7 +13,7 @@ function BookMark() {
     road_address_namen: string;
     place_name: string;
     id: number;
-    image_url: string;
+    img_url: string;
     location: string;
     group_name: string;
   };
@@ -21,7 +21,7 @@ function BookMark() {
   const [bookmarkData, setBookmarkData] = useState<BookMarkDataProps[]>([]);
   // 첫 랜더링 됐을 때 slider에 표시되는 cities 목록
   const [cities, setCities] = useState([]);
-  // slider에서 클릭한 city 관리 
+  // slider에서 클릭한 city 관리
   const [city, setCity] = useState('');
 
   // 북마크 데이터 가져오기
@@ -47,7 +47,7 @@ function BookMark() {
         headers: { Authorization: `${localStorage.getItem('Authorization')}` },
       });
       // console.log('city response', response);
-      
+
       // API 응답 데이터를 배열에 저장
       setBookmarkData(response.data.bookmarkList);
     } catch (error) {
@@ -71,7 +71,8 @@ function BookMark() {
   // category별 북마크 get 요청
 
   useEffect(() => {
-    getBookMark(); console.log("렌더링 됨")
+    getBookMark();
+    console.log('렌더링 됨');
   }, [city]);
 
   // 카테고리...
@@ -87,7 +88,7 @@ function BookMark() {
     <Container>
       <SideBar>
         <Logo
-          src='https://ifh.cc/g/4fHXOp.png'
+          src="https://ifh.cc/g/4fHXOp.png"
           onClick={() => {
             navigate('/');
           }}
@@ -103,7 +104,7 @@ function BookMark() {
       <BookMarkBar>
         <p style={{ marginLeft: '20px' }}>북마크</p>
         <SliderArea>
-          <Slider texts={cities} setCity={setCity} getCityBookMark={getCityBookMark}/>
+          <Slider texts={cities} setCity={setCity} getCityBookMark={getCityBookMark} />
         </SliderArea>
 
         <List>
@@ -111,7 +112,7 @@ function BookMark() {
             return (
               <BookMarkBox
                 key={item.id}
-                imgUrl={item.image_url}
+                imgUrl={item.img_url}
                 name={item.place_name}
                 category={item.group_name}
                 location={item.address_name}
@@ -196,4 +197,4 @@ const MapArea = styled.div`
   flex: 1;
   height: 100vh;
   background-color: #b7d6ff;
-`
+`;
